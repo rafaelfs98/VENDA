@@ -84,7 +84,8 @@ uses
   ZXing.QrCode.Internal.FormatInformation in '..\ESTOQUE MOBILE\ZXing.Delphi-v_3.0\Lib\Classes\2D Barcodes\Decoder\ZXing.QrCode.Internal.FormatInformation.pas',
   ZXing.QrCode.Internal.Mode in '..\ESTOQUE MOBILE\ZXing.Delphi-v_3.0\Lib\Classes\2D Barcodes\Decoder\ZXing.QrCode.Internal.Mode.pas',
   ZXing.QrCode.Internal.QRCodeDecoderMetaData in '..\ESTOQUE MOBILE\ZXing.Delphi-v_3.0\Lib\Classes\2D Barcodes\Decoder\ZXing.QrCode.Internal.QRCodeDecoderMetaData.pas',
-  ZXing.QrCode.Internal.Version in '..\ESTOQUE MOBILE\ZXing.Delphi-v_3.0\Lib\Classes\2D Barcodes\Decoder\ZXing.QrCode.Internal.Version.pas';
+  ZXing.QrCode.Internal.Version in '..\ESTOQUE MOBILE\ZXing.Delphi-v_3.0\Lib\Classes\2D Barcodes\Decoder\ZXing.QrCode.Internal.Version.pas',
+  uDm in 'uDm.pas' {dm: TDataModule};
 
 {$R *.res}
 
@@ -92,6 +93,7 @@ begin
   Application.Initialize;
   Application.CreateForm(TForm1, Form1);
   Application.CreateForm(TfrmCamera, frmCamera);
+  Application.CreateForm(Tdm, dm);
   Application.Run;
 end.
 

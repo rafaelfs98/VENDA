@@ -17,7 +17,7 @@ uses
   FireDAC.DApt, Data.DB, FireDAC.Comp.DataSet, FireDAC.Comp.Client,Loading,
   FireDAC.Comp.UI, Datasnap.DBClient, IdBaseComponent, uFancyDialog, IdComponent,
   IdTCPConnection, IdTCPClient, IdHTTP, FMX.ScrollBox,System.IniFiles,
-  FMX.Memo,System.IOUtils,System.JSON,FMX.DialogService,uFormat,
+  FMX.Memo,System.IOUtils,System.JSON,FMX.DialogService,uFormat,uDm,
 
 
   System.Character,
@@ -455,6 +455,7 @@ type
     Label55: TLabel;
     Rectangle8: TRectangle;
     edtcpf: TEdit;
+    Layout51: TLayout;
     procedure Label18Click(Sender: TObject);
     procedure RoundRect1Click(Sender: TObject);
     procedure SpeedButton1Click(Sender: TObject);
@@ -549,6 +550,9 @@ type
     procedure Image20Click(Sender: TObject);
     procedure Rectangle52Click(Sender: TObject);
     procedure Rectangle9Click(Sender: TObject);
+    procedure edtCEPExit(Sender: TObject);
+    procedure Image3Click(Sender: TObject);
+
 
   private
     permissao:T99permissions;
@@ -1232,6 +1236,29 @@ begin
   Formatar(Edit4, TFormato.Valor); // Valor...
 end;
 
+
+procedure TForm1.edtCEPExit(Sender: TObject);
+var sEndereco: TStringList;
+
+begin
+   sEndereco := TStringList.Create();
+
+   sEndereco := dm.buscaCEP(edtCEP.Text);
+  if sEndereco.Count = 0 then
+    begin
+      diag.Show(TIconDialog.Error,'','Cep inválido','OK');
+    end
+  else
+    begin
+      edtEndereco.Text := sEndereco[0].ToUpper;
+      edtCidade.Text   := sEndereco[3].ToUpper;
+      edtBairro.Text   := sEndereco[1].ToUpper;
+
+
+    end;
+
+end;
+
 procedure TForm1.edtDescontoKeyDown(Sender: TObject; var Key: Word;
   var KeyChar: Char; Shift: TShiftState);
 begin
@@ -1887,7 +1914,7 @@ begin
   lbCliente.Text := '';
   lbTotal.Text   := 'Total : R$ 0,00';
   Image2.tag := 1;
-
+  Image3.tag := 2;
 
    if icodVenda <> 0 then
    begin
@@ -1907,7 +1934,16 @@ begin
     Image2.tag := 2;
 
       RetornaVenda(icodVenda);
-      atualizaCliente(iCod.ToString);
+      if iCod = 0 then
+      begin
+       lbCliente.Text := 'Cliente:  ' + 'Não indentificado';
+      end
+      else
+      begin
+        atualizaCliente(iCod.ToString);
+      end;
+
+      //
       abreVenda.ExecuteTarget(self);
 
 
@@ -1963,6 +1999,16 @@ end;
 procedure TForm1.Image33Click(Sender: TObject);
 begin
   LayoutQtdFracionado.Visible := False;
+end;
+
+procedure TForm1.Image3Click(Sender: TObject);
+begin
+ Image3.tag := 1;
+  Image2.tag := 1;
+ diag.Show(TIconDialog.Question, 'Atenção ',
+                  'Deseja Alterar Cliente?', 'Sim',Sim, 'Não', Nao);
+
+
 end;
 
 procedure TForm1.lancaItemDireto(cod:String);
@@ -3491,9 +3537,16 @@ end;
 
 procedure TForm1.Rectangle52Click(Sender: TObject);
 begin
+
+
   atualizaCliente(edtCpf.Text);
-  LancaVenda;
+  if Image3.tag = 2 then
+  begin
+    LancaVenda;
   lvProdutosPedidos.Items.Clear;
+
+  end;
+
   rctModalCpf.Visible := False;
 end;
 
