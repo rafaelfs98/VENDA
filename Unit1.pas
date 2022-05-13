@@ -575,6 +575,7 @@ type
     procedure ClickSimCliente(Sender: TObject);
     procedure Sim(Sender: TObject);
     procedure Nao(Sender: TObject);
+    procedure VerficaEdit(Sender: TObject);
     {$ELSE}
     timerTEF:TTimer;
     {$ENDIF}
@@ -593,6 +594,7 @@ type
     cdsClientestemp:TClientDataSet;
     desc:string;
     valor:Real;
+    iEdit : Integer;
     diag:TFancyDialog;
   end;
 
@@ -1910,7 +1912,6 @@ end;
 
 procedure TForm1.Image2Click(Sender: TObject);
 begin
-
   lbCliente.Text := '';
   lbTotal.Text   := 'Total : R$ 0,00';
   Image2.tag := 1;
@@ -1942,11 +1943,7 @@ begin
       begin
         atualizaCliente(iCod.ToString);
       end;
-
-      //
       abreVenda.ExecuteTarget(self);
-
-
 
    end
    else
@@ -1961,18 +1958,6 @@ begin
 
 
    end;
-
-
- // imgItens.Visible := False;
-
-  
-
- { icodVenda      := inserirVenda();
-  lbNvenda.Text  := 'N° Venda : '+FormatFloat('0',icodVenda);
-  RetornaItens(icodVenda);
- { edtCpf.Text := '';
-  rctOpcaidade.Visible := True;
-  rctModalCpf.Visible := True;}
 
 end;
 
@@ -2448,7 +2433,7 @@ const sListaProduto = '<soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSc
 +'<soapenv:Body>'
 +'<urn:PedidoBalcao soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">'
 +'<loja xsi:type="xsd:int">?lja?</loja>'
-+'<colaborador xsi:type="xsd:int">?cbl?</colaborador>'
++'<cliente xsi:type="xsd:int">?cbl?</cliente>'
 +'<sNome xsi:type="xsd:string">?cpf?</sNome>'
 +'</urn:PedidoBalcao>'
 +'</soapenv:Body>'
@@ -2466,8 +2451,8 @@ begin
     Retorno := TStringStream.Create(EmptyStr);
     sListaPedido:= sListaProduto;
     sListaPedido:= StringReplace(sListaPedido,'?lja?',IntToStr(iLoja),[rfReplaceAll]);
-    sListaPedido:= StringReplace(sListaPedido,'?cpf?','11870848403',[rfReplaceAll]);
-    sListaPedido:= StringReplace(sListaPedido,'?cbl?',codusuario.ToString,[rfReplaceAll]);
+    sListaPedido:= StringReplace(sListaPedido,'?cpf?','',[rfReplaceAll]);
+    sListaPedido:= StringReplace(sListaPedido,'?cbl?',IntToStr(iCod_Cadastro),[rfReplaceAll]);
     Solicit := TStringStream.Create(sListaPedido, TEncoding.UTF8);
 
     IdHTTP1.Request.ContentType := 'text/xml';
@@ -2982,8 +2967,9 @@ begin
 
                    icodVenda := StrToInt(lvPedidos.Items[lvPedidos.Selected.Index].Detail);
 
-                   atualizaCliente('11');
+
                    RetornaVenda(icodVenda);
+                   atualizaCliente(iCod_Cadastro.ToString);
                    voltaVenda.ExecuteTarget(self);
                  end;
             end;
@@ -3361,9 +3347,6 @@ end;
 
 procedure TForm1.btnFecharClick(Sender: TObject);
 begin
-
-
-
   diag.Show(TIconDialog.Success, 'Sucesso! Venda salva ', 'Venda de Numero :'+icodVenda.ToString);
 
   icodVenda := 0;
@@ -3580,9 +3563,15 @@ end;
 
 procedure TForm1.Rectangle9Click(Sender: TObject);
 begin
-edtCpf.text := edtCpfCliente.Text;
- voltaMenu.ExecuteTarget(self);
+ VerficaEdit(Self);
+
+ if iEdit = 0 then
+ begin
+ edtCpf.text := edtCpfCliente.Text;
+ abreVenda.ExecuteTarget(self);
  rctModalCpf.Visible := True;
+ end;
+
 end;
 
 procedure TForm1.RetornaItens(ID:Integer);
@@ -3705,7 +3694,7 @@ begin
     cdsItensVenda.CreateDataSet;
     cdsItensVenda.LoadFromStream(Retorno2);
 
-
+    iCod_Cadastro := cdsPedidoRESPONSAVEL.AsInteger;
     lbNvenda.Text := 'N° VENDA : '+FormatFloat('00000000',icodVenda);
     lbTotal.Text := 'TOTAL : R$ '+formatFloat('0.00',cdsPedidoTOTAL.AsFloat);
     listaItensMesa;
@@ -3803,105 +3792,107 @@ begin
     iPosFinal   := Pos('</xml>',sRetorno);
     sRetorno := copy(sRetorno,iPosInicial,iPosFinal-iPosInicial);
 
-
-
-
    Retorno := TStringStream.Create(sRetorno);
     cdsClientes.Close;
     cdsClientes.CreateDataSet;
+    cdsClientestemp.LoadFromStream(Retorno);
 
-    {cdsProdutos.Filtered := False;
-    cdsProdutos.Filter := 'TIPO = 0 or 4';
-    cdsProdutos.Filtered := True;}
-   cdsClientestemp.LoadFromStream(Retorno);
-   // cdsProdutos.LoadFromStream(Retorno);
-
-
-     { with fdqCarga do
-       begin
-         close;
-         sql.Clear;
-         sql.Add('DELETE FROM CLIENTES');
-         ExecSQL;
-       end;
-            }
     SCOD :='0';
-     if not cdsClientestemp.IsEmpty then
-      begin
+  if not cdsClientestemp.IsEmpty then
+  begin
 
-          cdsClientestemp.First;
-
-
-           while not cdsClientestemp.eof do
-            begin
+      cdsClientestemp.First;
 
 
-               if cdsClientestemp.FieldByName('TIPO').AsString = 'C' then
+       while not cdsClientestemp.eof do
+        begin
+           if cdsClientestemp.FieldByName('TIPO').AsString = 'C' then
+           begin
+              if Image2.tag = 1 then
+              begin
+                  if cdsclientestemp.FieldByName('CNPJ').AsString = cod then
+                begin
+                scod := '1';
+                iCod_Cadastro := cdsclientestemp.FieldByName('COD_CADASTRO').Asinteger;
+                lbCliente.Visible := True;
+                Layout11.Height := 85;
+                lbCliente.Text := 'Cliente :  '+ cdsclientestemp.FieldByName('CNPJ').AsString+'-'+cdsClientestemp.FieldByName('RAZAO').AsString;
+                end;
+              end;
+
+               if Image2.tag = 2 then
                begin
-                  if Image2.tag = 1 then
-                  begin
-                      if cdsclientestemp.FieldByName('CNPJ').AsString = cod then
-                    begin
-                    scod := '1';
-
-                    iCod_Cadastro := cdsclientestemp.FieldByName('COD_CADASTRO').Asinteger;
-                    lbCliente.Visible := True;
-                    Layout11.Height := 85;
-                    lbCliente.Text := 'Cliente :  '+ cdsclientestemp.FieldByName('CNPJ').AsString+'-'+cdsClientestemp.FieldByName('RAZAO').AsString;
-
-
-                    end;
-
-
+                   if cdsclientestemp.FieldByName('COD_CADASTRO').Asinteger = cod.ToInteger then
+                 begin
+                 scod := '1';
+                 //iCod_Cadastro := cdsclientestemp.FieldByName('COD_CADASTRO').Asinteger;
+                 lbCliente.Visible := True;
+                 Layout11.Height := 85;
+                 lbCliente.Text := 'Cliente :  '+ cdsclientestemp.FieldByName('CNPJ').AsString+'-'+cdsClientestemp.FieldByName('RAZAO').AsString;
                   end;
 
-                   if Image2.tag = 2 then
-                   begin
-                       if cdsclientestemp.FieldByName('COD_CADASTRO').Asinteger = cod.ToInteger then
-                     begin
-                     scod := '1';
-
-                     //iCod_Cadastro := cdsclientestemp.FieldByName('COD_CADASTRO').Asinteger;
-                     lbCliente.Visible := True;
-                     Layout11.Height := 85;
-                     lbCliente.Text := 'Cliente :  '+ cdsclientestemp.FieldByName('CNPJ').AsString+'-'+cdsClientestemp.FieldByName('RAZAO').AsString;
-
-
-                      end;
-
-                   end;
-
-
                end;
+           end;
+           cdsClientestemp.Next;
+        end;
 
+        if sCod = '0' then
+        begin
+          diag.Show(TIconDialog.Question, 'Atenção ',
+              'Cliente Não Cadastrado,Desja Cadastrar ?', 'Sim',ClickSimCliente, 'Não', ClickNao);
+        end;
 
+  end;
 
+except
 
-               cdsClientestemp.Next;
-            end;
+  diag.Show(TIconDialog.Error,'Falha da importação de produtos','' )
+end;
 
+end;
+procedure TForm1.VerficaEdit(Sender: TObject);
+begin
 
-            if sCod = '0' then
-            begin
+ if (Length(edtCpfCliente.text )<11) or(Length(edtCpfCliente.text )<14 ) then
+ begin
+ iEdit := 1;
+  diag.Show(TIconDialog.Error,'Atenção','Digite o CNPJ ou CPF Valido' );
+  exit
+ end
+ else
+ if edtCpfCliente.Text = '' then
+ begin
+ iEdit := 1;
 
+   diag.Show(TIconDialog.Error,'Atenção','O Campo CPF Não Pode esta vazio' ) ;
+   exit
+ end
+ else
+ begin
 
-              diag.Show(TIconDialog.Question, 'Atenção ',
-                  'Deseja Desestir da Venda?', 'Sim',ClickSimCliente, 'Não', ClickNao);
+   iedit := 0;
+ end;
 
-            end;
+  if (edtCEP.Text = '') or (edtEndereco.Text = '')
+  or (edtNome.text ='') or ( edtBairro.Text = '')
+  or (edtCidade.Text = '')then
+  begin
+    iEdit := 1;
+    diag.Show(TIconDialog.Error,'Atenção','Preencha os Campos com *' );
 
-      end;
-
-  except
-
-    diag.Show(TIconDialog.Error,'Falha da importação de produtos','' )
+   exit
+  end
+  else
+  begin
+    iEdit := 0;
   end;
 
 
 
-;
+
+
+
 
 
 end;
-
 end.
