@@ -1,9 +1,6 @@
 unit Unit1;
-
 interface
-
 {$DEFINE __TTASK__}
-
 uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
   FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.Layouts,
@@ -19,38 +16,30 @@ uses
   IdTCPConnection, IdTCPClient, IdHTTP, FMX.ScrollBox,System.IniFiles,
   FMX.Memo,System.IOUtils,System.JSON,FMX.DialogService,uFormat,uDm,
 
-
   System.Character,
   System.Generics.Collections,
   System.UIConsts,
   FMX.EditBox, FMX.NumberBox,
   System.Threading,
   FMX.Surfaces, u99Permissions, ufrmCamera, FMX.Memo.Types,
-  IdAuthentication, FireDAC.Phys.SQLiteWrapper.Stat, FMX.WebBrowser;
-
-
+  IdAuthentication, FireDAC.Phys.SQLiteWrapper.Stat, FMX.WebBrowser, FMX.ListBox,
+  FMX.Filter.Effects;
 
 
   const
-
   NORMAL = false;
   BOLD = true;
-
   GER7_VENDA = '1';
   GER7_CANCELAMENTO = '2';
   GER7_FUNCOES = '3';
-
   GER7_DESABILITA_IMPRESSAO = '0';
   GER7_HABILITA_IMPRESSAO = '1';
-
   GER7_CREDITO = '1';
   GER7_DEBITO = '2';
   GER7_VOUCHER = '4';
-
   GER7_SEMPARCELAMENTO = '0';
   GER7_PARCELADO_LOJA = '1';
   GER7_PARCELADO_ADM = '2';
-
 type
   TForm1 = class(TForm)
     TabControl1: TTabControl;
@@ -337,19 +326,6 @@ type
     Image29: TImage;
     Image30: TImage;
     Timer1: TTimer;
-    LayoutQtd: TLayout;
-    Rectangle12: TRectangle;
-    Rectangle13: TRectangle;
-    lbDescricao: TLabel;
-    Image31: TImage;
-    lbQtd: TLabel;
-    imgMais: TImage;
-    imgMenos: TImage;
-    Rectangle14: TRectangle;
-    Label26: TLabel;
-    Rectangle15: TRectangle;
-    Rectangle16: TRectangle;
-    ListView2: TListView;
     Image32: TImage;
     Label22: TLabel;
     imgRedonda: TImage;
@@ -401,17 +377,6 @@ type
     Image37: TImage;
     edtObs2: TEdit;
     Layout46: TLayout;
-    Rectangle4: TRectangle;
-    edtquantidade: TEdit;
-    Layout47: TLayout;
-    Label41: TLabel;
-    Layout48: TLayout;
-    Label42: TLabel;
-    Label43: TLabel;
-    Layout49: TLayout;
-    Rectangle5: TRectangle;
-    Edit4: TEdit;
-    Label44: TLabel;
     Rectangle6: TRectangle;
     SpeedButton6: TSpeedButton;
     Label45: TLabel;
@@ -456,6 +421,37 @@ type
     Rectangle8: TRectangle;
     edtcpf: TEdit;
     Layout51: TLayout;
+    Layout53: TLayout;
+    Label54: TLabel;
+    Image12: TImage;
+    tbTemas: TTabItem;
+    ToolBar9: TToolBar;
+    Label56: TLabel;
+    SpeedButton13: TSpeedButton;
+    lbxMesas: TListBox;
+    ListBoxItem1: TListBoxItem;
+    imgArmazem: TImage;
+    ListBoxItem2: TListBoxItem;
+    imgPet: TImage;
+    ListBoxItem3: TListBoxItem;
+    imgPraia: TImage;
+    ListBoxItem4: TListBoxItem;
+    imgpet02: TImage;
+    ListBoxItem5: TListBoxItem;
+    imgSup: TImage;
+    FillRGBEffect1: TFillRGBEffect;
+    rctGravaConfig: TRectangle;
+    Label57: TLabel;
+    LayoutQtd: TLayout;
+    Rectangle12: TRectangle;
+    Rectangle13: TRectangle;
+    lbDescricao: TLabel;
+    Image14: TImage;
+    lbQtd: TLabel;
+    imgMais: TImage;
+    imgMenos: TImage;
+    Rectangle14: TRectangle;
+    Label26: TLabel;
     procedure Label18Click(Sender: TObject);
     procedure RoundRect1Click(Sender: TObject);
     procedure SpeedButton1Click(Sender: TObject);
@@ -513,7 +509,6 @@ type
     procedure Image17Click(Sender: TObject);
     procedure SpeedButton2Click(Sender: TObject);
     procedure buscaVendas();
-
     {$IFNDEF __TTASK__}
     procedure timerTEFTimer(Sender: TObject);
     {$ENDIF}
@@ -541,8 +536,6 @@ type
       const AItem: TListViewItem);
     procedure Rectangle19Click(Sender: TObject);
     procedure Image33Click(Sender: TObject);
-    procedure Edit4Typing(Sender: TObject);
-    procedure edtquantidadeTyping(Sender: TObject);
     procedure Rectangle6Click(Sender: TObject);
     procedure EnviaRecebimento();
     procedure listarItens(busca: string; ind_clear: boolean; delay : integer);
@@ -552,7 +545,11 @@ type
     procedure Rectangle9Click(Sender: TObject);
     procedure edtCEPExit(Sender: TObject);
     procedure Image3Click(Sender: TObject);
-
+    procedure lbxMesasItemClick(const Sender: TCustomListBox;
+      const Item: TListBoxItem);
+    procedure SpeedButton13Click(Sender: TObject);
+    procedure Label54Click(Sender: TObject);
+    procedure rctGravaConfigClick(Sender: TObject);
 
   private
     permissao:T99permissions;
@@ -570,12 +567,12 @@ type
     procedure ClickNo(Sender: TObject);
     procedure ClickSim(Sender: TObject);
     procedure ClickNao(Sender: TObject);
-
     procedure atualizaCliente(cod : string);
     procedure ClickSimCliente(Sender: TObject);
     procedure Sim(Sender: TObject);
     procedure Nao(Sender: TObject);
     procedure VerficaEdit(Sender: TObject);
+    procedure lancaMovTemp(loja:Integer;cod_produto,descricao:String;qtd,total,venda:Real);
     {$ELSE}
     timerTEF:TTimer;
     {$ENDIF}
@@ -597,19 +594,12 @@ type
     iEdit : Integer;
     diag:TFancyDialog;
   end;
-
 var
   Form1: TForm1;
-
 implementation
 
 
-
-
 {$R *.fmx}
-
-
-
 
 
 
@@ -628,49 +618,35 @@ var sErro, sNumPedido,sRetorno, sCupom, sLinha, sCab : string;
     Retorno , Solicit: TStringStream;
     sListaPedido: string;
 begin
-
   try
-
   Retorno := TStringStream.Create(EmptyStr);
   sListaPedido:= sListaProduto;
   sListaPedido:= StringReplace(sListaPedido,'?l?',IntToStr(iLoja),[rfReplaceAll]);
   Solicit := TStringStream.Create(sListaPedido, TEncoding.UTF8);
-
   IdHTTP1.Request.ContentType := 'text/xml';
   IdHTTP1.Request.Charset := 'utf-8';
   IdHTTP1.Request.CustomHeaders.Values['SOAPAction'] := 'urn:uSRIIntf-ISRI#expCadColaborador';
   IdHTTP1.ProtocolVersion := pv1_1;
   IdHTTP1.HTTPOptions := IdHTTP1.HTTPOptions + [hoKeepOrigProtocol];
     try
-
       //IdHTTP1.Post('http://sriservicos.com.br/integrasri/IntegraSRI.dll/soap/ICliente',Solicit, Retorno);
       IdHTTP1.Post('http://'+sEndereco+'/soap/ISRI',Solicit, Retorno);
-
     except
       exit;
     end;
-
     sRetorno:= Retorno.DataString;
-
-
 
     sRetorno := StringReplace(sRetorno,'&gt;','>',[rfReplaceAll,rfIgnoreCase]);
     sRetorno := StringReplace(sRetorno,'&lt;','<',[rfReplaceAll,rfIgnoreCase]);
-
 
     iPosInicial := Pos('<xml xsi:type="xsd:string">',sRetorno)+29;
     iPosFinal   := Pos('</xml>',sRetorno);
     sRetorno := copy(sRetorno,iPosInicial,iPosFinal-iPosInicial);
 
-
-
     Retorno := TStringStream.Create(sRetorno);
-
     cdsColaborador.Close;
     cdsColaborador.CreateDataSet;
-
     cdsColaborador.LoadFromStream(Retorno);
-
     with fdqCarga do
      begin
        Close;
@@ -678,7 +654,6 @@ begin
        sql.Add('DELETE FROM COLABORADOR');
        ExecSQL;
      end;
-
 
     cdsColaborador.First;
     while not cdsColaborador.eof do
@@ -694,20 +669,14 @@ begin
            ParamByName('SENHA').AsString := cdsColaboradorSENHA.AsString;
             ParamByName('FUNCAO').AsString :='';
            ExecSQL;
-
          end;
          cdsColaborador.Next;
       end;
 
-
   except
     ShowMessage('Falha no processo de importação');
   end;
-
 end;
-
-
-
 
 
 procedure TForm1.atualizaProdutos;
@@ -728,12 +697,10 @@ const sListaProduto = '<soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSc
 begin
          iCont := 1;
   try
-
   Retorno := TStringStream.Create(EmptyStr);
   sListaPedido:= sListaProduto;
   sListaPedido:= StringReplace(sListaPedido,'?*?',IntToStr(iLoja),[rfReplaceAll]);
   Solicit := TStringStream.Create(sListaPedido, TEncoding.UTF8);
-
   IdHTTP1.Request.ContentType := 'text/xml';
   IdHTTP1.Request.Charset := 'utf-8';
   IdHTTP1.ConnectTimeout  := 5000;
@@ -746,37 +713,28 @@ begin
     except
       exit;
     end;
-
     sRetorno:= Retorno.DataString;
-
-
 
 
     {if Retorno = sNumPedido
        then exit;
-
        Retorno := sNumPedido;
      }
-
     sRetorno := StringReplace(sRetorno,'&gt;','>',[rfReplaceAll,rfIgnoreCase]);
     sRetorno := StringReplace(sRetorno,'&lt;','<',[rfReplaceAll,rfIgnoreCase]);
-
 
     iPosInicial := Pos('<xml xsi:type="xsd:string">',sRetorno)+29;
     iPosFinal   := Pos('</xml>',sRetorno);
     sRetorno := copy(sRetorno,iPosInicial,iPosFinal-iPosInicial);
 
-
     Retorno := TStringStream.Create(sRetorno);
     cdsProdutos.Close;
     cdsProdutos.CreateDataSet;
-
     {cdsProdutos.Filtered := False;
     cdsProdutos.Filter := 'TIPO = 0 or 4';
     cdsProdutos.Filtered := True;}
     cdsProdtemp.LoadFromStream(Retorno);
    // cdsProdutos.LoadFromStream(Retorno);
-
 
       with fdqCarga do
        begin
@@ -786,12 +744,9 @@ begin
          ExecSQL;
        end;
 
-
      if not cdsProdtemp.IsEmpty then
       begin
-
         cdsProdtemp.First;
-
 
            while not cdsProdtemp.eof do
             begin
@@ -814,29 +769,21 @@ begin
                  ParamByName('venda').AsFloat          := cdsProdtemp.FieldByName('VENDA').AsFloat;
                  ParamByName('cod_interno').AsInteger  := iCont;
                  ExecSQL;
-
                end;
                iCont := iCont+1;
                cdsProdtemp.Next;
             end;
-
       end;
-
   except
-
     diag.Show(TIconDialog.Error,'Falha da importação de produtos','' )
   end;
 
-
 end;
-
 procedure TForm1.atualizaTotal(icodVenda:Integer);
 var tb:TFDQuery;
 begin
-
    tb := TFDQuery.Create(self);
    tb.Connection := FDConnection1;
-
    with tb do
     begin
       Close;
@@ -844,14 +791,10 @@ begin
       sql.Add('SELECT SUM(TOTAL)  AS TOTAL,SUM(DESCONTO) AS DESCONTO FROM ITENS_VENDA WHERE ID_VENDA = :ID ');
       ParamByName('ID').AsInteger := icodVenda;
       Open();
-
     end;
-
     lbTotal.Text := 'Total :  R$ '+FormatFloat('0.00',tb.FieldByName('TOTAL').AsFloat);
-
     rTotal    := tb.FieldByName('TOTAL').AsFloat;
     rDesconto := tb.FieldByName('DESCONTO').AsFloat;
-
     with tb do
      begin
       Close;
@@ -861,15 +804,11 @@ begin
       ParamByName('ID').AsInteger  := icodVenda;
       ParamByName('DESC').AsFloat  := rDesconto;
       ExecSQL;
-
      end;
-
 
    if Assigned(tb) then
       FreeAndNil(tb);
-
 end;
-
 procedure TForm1.buscaVendas;
 const sListaProduto = '<soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:uPOSIntf-IPOS">'
                      +'<soapenv:Header/>'
@@ -880,22 +819,18 @@ const sListaProduto = '<soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSc
                      +'</urn:listaBalcao>'
                      +'</soapenv:Body>'
                      +'</soapenv:Envelope>';
-
 var sErro, sNumPedido,sRetorno,sRetorno2, sCupom, sLinha, sCab : string;
     iTermino, iPosInicial, iPosFinal,iPosInicial2, iPosFinal2, i, iTamanho, iItem :integer;
     LItem : TListViewItem;
     Retorno ,Retorno2, Solicit: TStringStream;
     sListaPedido: string;
 begin
-
   try
-
     Retorno := TStringStream.Create(EmptyStr);
     sListaPedido:= sListaProduto;
     sListaPedido:= StringReplace(sListaPedido,'?lja?',IntToStr(iLoja),[rfReplaceAll]);
     sListaPedido:= StringReplace(sListaPedido,'?cvd?',IntToStr(codusuario),[rfReplaceAll]);
     Solicit := TStringStream.Create(sListaPedido, TEncoding.UTF8);
-
     IdHTTP1.Request.ContentType := 'text/xml';
     IdHTTP1.Request.Charset := 'utf-8';
     IdHTTP1.ConnectTimeout := 5000;
@@ -908,35 +843,25 @@ begin
     except
       exit;
     end;
-
     sRetorno:= Retorno.DataString;
-
 
     sRetorno := StringReplace(sRetorno,'&gt;','>',[rfReplaceAll,rfIgnoreCase]);
     sRetorno := StringReplace(sRetorno,'&lt;','<',[rfReplaceAll,rfIgnoreCase]);
 
-
     iPosInicial := Pos('<?xml version="1.0" standalone="yes"?>  ',sRetorno)+40;
     iPosFinal   := Pos('</xml>',sRetorno);
-
     sRetorno := copy(sRetorno,iPosInicial,iPosFinal-iPosInicial);
     Retorno := TStringStream.Create(sRetorno);
     cdsVendas.Close;
     cdsVendas.CreateDataSet;
-
     cdsVendas.LoadFromStream(Retorno);
     lvPedidos.Items.Clear;
    // listaVendas;
-
   except
-
     diag.Show(TIconDialog.Error,'Falha no lançamento da venda','' )
   end;
 
-
-
 end;
-
 function TForm1.cancelaItem(loja, item, npedido: integer): Real;
  const sListaProduto = '<soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:uRestorIntf-IRestor">'
 +'<soapenv:Header/>'
@@ -948,23 +873,19 @@ function TForm1.cancelaItem(loja, item, npedido: integer): Real;
 +'</urn:CancelaItem>'
 +'</soapenv:Body>'
 +'</soapenv:Envelope>';
-
 var sErro, sNumPedido,sRetorno, sCupom, sLinha, sCab : string;
     iTermino, iPosInicial, iPosFinal, i, iTamanho, iItem :integer;
     LItem : TListViewItem;
     Retorno , Solicit: TStringStream;
     sListaPedido: string;
 begin
-
   try
-
   Retorno := TStringStream.Create(EmptyStr);
   sListaPedido:= sListaProduto;
   sListaPedido:= StringReplace(sListaPedido,'?nloja?',IntToStr(loja),[rfReplaceAll]);
   sListaPedido:= StringReplace(sListaPedido,'?nit?',inttostr(item),[rfReplaceAll]);
   sListaPedido:= StringReplace(sListaPedido,'?npdd?',IntToStr(npedido),[rfReplaceAll]);
   Solicit := TStringStream.Create(sListaPedido, TEncoding.UTF8);
-
   IdHTTP1.Request.ContentType := 'text/xml';
   IdHTTP1.Request.Charset := 'utf-8';
   IdHTTP1.Request.CustomHeaders.Values['SOAPAction'] := 'urn:uRestorIntf-IRestor#CancelaItem';
@@ -976,37 +897,25 @@ begin
     except
       exit;
     end;
-
     sRetorno:= Retorno.DataString;
-
     {if Retorno = sNumPedido
        then exit;
-
        Retorno := sNumPedido;
      }
-
     sRetorno := StringReplace(sRetorno,'&gt;','>',[rfReplaceAll,rfIgnoreCase]);
     sRetorno := StringReplace(sRetorno,'&lt;','<',[rfReplaceAll,rfIgnoreCase]);
-
-
 
     iPosInicial := Pos('<return xsi:type="xsd:int">',sRetorno)+27;
     iPosFinal   := Pos('</return>',sRetorno);
     sRetorno := copy(sRetorno,iPosInicial,iPosFinal-iPosInicial);
 
-
     Result := strtoint(sRetorno);
-
 
   except
    diag.Show(TIconDialog.Error,'Falha na exclusão do item','' )
-
   end;
 
-
-
 end;
-
 procedure TForm1.addListaProduto(codigo,descricao:String;preco:Real);
 begin
  with lvProdutos.Items.Add do
@@ -1016,110 +925,82 @@ begin
      TListItemText(Objects.FindDrawable('Text3')).Text := 'Preço R$ '+formatFloat('0.00',preco);
      TListItemText(Objects.FindDrawable('Text2')).Text := Copy(descricao,1,2);
    end;
-
 end;
-
 
 procedure TForm1.CargaProduto(busca: string; ind_clear: boolean; delay : integer);
 var LItem : TListViewItem;
     tb:TFDQuery;
 begin
-
     if lvprodutos.TagString = '1' then
         exit;
-
     lvprodutos.TagString := '1'; // Em processamento...
-
     if ind_clear then
     begin
         lvprodutos.Items.Clear;
         lvprodutos.Tag := 0;
     end;
-
     lvprodutos.BeginUpdate;
-
     TThread.CreateAnonymousThread(procedure
     begin
         sleep(delay);
-
         FdqCarga.Active := false;
         FdqCarga.SQL.Clear;
         FdqCarga.SQL.Add('SELECT P.* ');
         FdqCarga.SQL.Add('FROM PRODUTOS P');
-
         // Filtro...
         if busca <> '' then
         begin
             FdqCarga.SQL.Add('WHERE P.DESCRICAO LIKE ''%'' || :BUSCA || ''%'' ');
             FdqCarga.ParamByName('BUSCA').Value := busca;
         end;
-
         FdqCarga.SQL.Add('ORDER BY DESCRICAO');
         FdqCarga.SQL.Add('LIMIT :PAGINA, :QTD_REG');
         FdqCarga.ParamByName('PAGINA').Value := lvprodutos.Tag * 25;
         FdqCarga.ParamByName('QTD_REG').Value := 25;
         FdqCarga.Active := true;
-
         lvprodutos.Tag := lvprodutos.Tag + 1;
-
         while NOT FdqCarga.Eof do
         begin
             TThread.Synchronize(nil, procedure
             begin
-
                 addListaProduto(FdqCarga.FieldByName('COD_PRODUTO').AsString,
                            FdqCarga.FieldByName('DESCRICAO').AsString,
                            FdqCarga.FieldByName('VENDA').AsFloat);
 
-
             end);
-
             FdqCarga.Next;
         end;
-
         // Nao carregar mais dados...
         if FdqCarga.RecordCount = 0 then
             lvprodutos.Tag := -1;
-
         lvprodutos.TagString := ''; // Processamento terminou...
-
         TThread.Synchronize(nil, procedure
         begin
             lvprodutos.EndUpdate;
 //            img_no_produto.Visible := lv_produtos.Items.Count = 0;
         end);
-
     end).Start;
 end;
-
 procedure TForm1.carregaFinalizadora;
  var Litem:TListViewItem;
      txt:TListItemText;
      img:TListItemImage;
      i:Integer;
-
 begin
-
     lvFinalizadora.Items.Clear;
-
     LItem := lvFinalizadora.Items.Add;
     LItem.Bitmap := imgReal.MakeScreenshot ;
     LItem.Text := 'Dinheiro';
     Litem.Detail := 'D';
 
-
     LItem := lvFinalizadora.Items.Add;
     LItem.Bitmap := imgCartao.MakeScreenshot ;
     LItem.Text := 'Cartão';
     Litem.Detail := 'C';
-
     Label14.Text := 'SALDO R$ '+FormatFloat('0.00',rTotal);
 
 
-
-
 end;
-
 function TForm1.LerPerfil: string;
 var
   sIni:string;
@@ -1142,7 +1023,6 @@ begin
     Ini.DisposeOf;
   end;
   {$ENDIF}
-
   {$IFDEF MSWINDOWS}
   try
 //    sIni := 'E:\producao\android\DescontoMobile\Com Venda\App Santana\Perfil.ini';
@@ -1161,9 +1041,7 @@ begin
   end;
   {$ENDIF}
 
-
 end;
-
 function TForm1.SetAsBase64(const ASource: string):TBitmap;
 var
   LInputStream: TStringStream;
@@ -1185,9 +1063,7 @@ begin
     LInputStream.Free;
   end;
 
-
 end;
-
 procedure TForm1.conexao;
 begin
    with FDConnection1 do
@@ -1201,7 +1077,6 @@ begin
                 Exception.Create('Error de conexão com o banco de Dados: ');
         end;
         {$ENDIF}
-
         {$IFDEF ANDROID}
         Params.Values['DriverID']:= 'SQLite';
         try
@@ -1211,7 +1086,6 @@ begin
             ShowMessage('erro de conexao');
         end;
         {$ENDIF}
-
        {$IFDEF MSWINDOWS}
         try
              Params.Values['Database']:= 'D:\producao\android\VendaMobile\banco\venda.s3db';
@@ -1221,10 +1095,8 @@ begin
            ShowMessage('erro de conexão');
         end;
         {$ENDIF}
-
     end;
 end;
-
 procedure TForm1.Edit2ChangeTracking(Sender: TObject);
 begin
   { cdsProdtemp.Filtered := False;
@@ -1232,13 +1104,6 @@ begin
    cdsProdtemp.Filtered := True;}
    CargaProduto(UpperCase(Edit2.Text),true,0);
 end;
-
-procedure TForm1.Edit4Typing(Sender: TObject);
-begin
-  Formatar(Edit4, TFormato.Valor); // Valor...
-end;
-
-
 procedure TForm1.edtCEPExit(Sender: TObject);
 var sEndereco: TStringList;
 
@@ -1266,12 +1131,6 @@ procedure TForm1.edtDescontoKeyDown(Sender: TObject; var Key: Word;
 begin
   formatarMoeda(edtDesconto,KeyChar);
 end;
-
-procedure TForm1.edtquantidadeTyping(Sender: TObject);
-begin
-  Formatar(edtquantidade, TFormato.Valor); // Valor...
-end;
-
 procedure TForm1.enviaVenda;
 var req, resp:TStringStream;
  ResultsArray :TJSONArray;
@@ -1286,28 +1145,20 @@ var req, resp:TStringStream;
  const  user = 'cliente.sri';
  const  password = '698dc19d489c4e4db73e28a713eab07b';
  const  endPoint = 'http://srionline.com.br/mamba/mambaserver.dll';
-
 begin
-
     sId := '123123123';
-
     IdHTTP1:= TIdHTTP.Create(self);
     IdHTTP1.ConnectTimeout := 5000;
     IdHTTP1.ReadTimeout := 10000;
     idHttp1.Request.Clear;
-
     idHttp1.Request.BasicAuthentication := True;
     IdHTTP1.Request.Username := user;
     IdHTTP1.Request.Password := password;
     IdHTTP1.Request.Accept := 'text/javascript';
-
     IdHTTP1.Request.ContentEncoding := 'utf-8';
-
   //  strAutentic:= TStringStream.Create(ResultsArray.ToString);
-
      tb := TFDQuery.Create(self);
      tb.Connection := FDConnection1;
-
      with tb do
       begin
         Close;
@@ -1316,12 +1167,10 @@ begin
         ParamByName('ID').AsInteger := icodVenda;
         Open();
       end;
-
      if not tb.IsEmpty then
       begin
         tb.First;
         ResultsArray:= TJSONArray.Create;
-
         while not tb.eof do
           begin
             jsoItem:= TJSONObject.Create;
@@ -1331,7 +1180,6 @@ begin
             jsoItem.AddPair( 'qtd', TJSONNumber.Create(tb.FieldByName('QTD').AsFloat));
             jsoItem.AddPair( 'desconto', TJSONNumber.Create(0));
             jsoItem.AddPair( 'total', TJSONNumber.Create(tb.FieldByName('TOTAL').AsFloat));
-
             ResultsArray.AddElement( jsoItem );
             tb.Next;
           end;
@@ -1340,13 +1188,11 @@ begin
             // usar serial do cell
         jsonFinal.AddPair('idequipamento',TJSONNumber.Create(123123123));
         jsonFinal.AddPair('mov',ResultsArray);
-
         {  strlist:= tstringlist.create;
         // strlist.Text:= ResultsArray.ToString;
          strlist.Text:= jsonFinal.ToString;
          strlist.SaveToFile('c:\temp\testeitem.json');
          exit; }
-
 
         req:= TStringStream.Create(jsonFinal.ToString);
         resp:= TStringStream.Create();
@@ -1363,9 +1209,7 @@ begin
                    else
                    if jsop.JsonString.Value = 'erro' then
                        erro := (jsoP.JsonValue as TJSONString ).Value;
-
                   end;
-
             if(iRetorno = 1) then
               begin
                 gerarNota;
@@ -1375,13 +1219,9 @@ begin
                 ShowMessage(jso.GetValue('erro').Value );
               end;
           end;
-
       end;
 
-
-
 end;
-
 procedure TForm1.FDConnection1AfterConnect(Sender: TObject);
 var fd:TFDQuery;
     versao:string;
@@ -1389,7 +1229,6 @@ begin
   {
   fd := TFDQuery.Create(self);
   fd.Connection := FDConnection1;
-
   with fd do
    begin
      close;
@@ -1397,15 +1236,12 @@ begin
      SQL.Add('SELECT * FROM VERSAO');
      Open();
    end;
-
    versao := fd.FieldByName('VERSAO').AsString;
-
    // ATUALIZA PARA 2
    if versao = '1' then
     begin
        versao := '2';
        fd.ExecSQL('CREATE TABLE TEMA ( CODIGO INTEGER);');
-
        with fd do
          begin
            close;
@@ -1415,15 +1251,12 @@ begin
            ExecSQL;
          end;
     end;}
-
 end;
-
 procedure TForm1.formatarMoeda(componente: TObject; var key: char);
 var
  sValor:string;
  valor:Double;
 begin
-
    if componente is TEdit then
     begin
       // se tecla pressionada é um numero, backsPace ou delete ....
@@ -1431,46 +1264,34 @@ begin
        begin
          // salva valor do edit
            sValor := TEdit(componente).Text;
-
            //valida vazio
            if sValor =EmptyStr then
               sValor := '0,00';
-
            // se valor numerico,insere na String...
            if key in ['0'..'9'] then
              sValor := Concat(sValor,key);
-
            //retira pontos  e virgulas
              sValor := Trim(StringReplace(sValor,'.','',[rfReplaceAll,rfIgnoreCase]));
              sValor := Trim(StringReplace(sValor,',','',[rfReplaceAll,rfIgnoreCase]));
-
            // inserindo 2 casas decimais
            valor := StrToFloat(sValor);
            valor := (valor/100);
-
            //retornando valor tratado no edit
            TEdit(componente).Text := FormatFloat('#,##0.00',valor);
-
            //reposiciona o cursor
            TEdit(componente).SelStart := Length(TEdit(componente).Text);
-
        end;
-
        // se não é uma key importante reseta
        if not (key in [#8,#9]) then
          key := #0;
     end;
 
-
 end;
-
 procedure TForm1.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
-
    diag.Show(TIconDialog.Question, 'Atenção',
             'Deseja fechar este aplicativo?', 'Sim', ClickOK, 'Não', ClickCancel);
 end;
-
 procedure TForm1.FormCreate(Sender: TObject);
 begin
    rctAbertura.Visible := True;
@@ -1481,13 +1302,11 @@ begin
 //  lblTitulo.text := 'Delphi '+getVersion+' (TTask)';
   {$ELSE}
 //  lblTitulo.text := 'Delphi '+getVersion+' (TTimer)';
-
   timerTEF:= TTimer.Create(Form1);
   timerTEF.Interval:=1;
   timerTEF.OnTimer:=timerTEFTimer;
   timerTEF.Enabled:=False;
   {$ENDIF}
-
    cdsProdtemp := TClientDataSet.Create(nil);
    cdsProdtemp.FieldDefs.Add('COD_PRODUTO',ftString,14);
    cdsProdtemp.FieldDefs.Add('DESCRICAO',ftString,60);
@@ -1511,24 +1330,19 @@ begin
    cdsProdtemp.Open;
    cdsProdtemp.LogChanges:= False;
 
-
    cdsClientestemp := TClientDataSet.Create(nil);
    cdsClientestemp.FieldDefs.Add('RAZAO',ftString,100);
    cdsClientestemp.FieldDefs.Add('CNPJ',ftString,100);
    cdsClientestemp.FieldDefs.Add('COD_CADASTRO',ftInteger);
    cdsClientestemp.FieldDefs.Add('TIPO',ftString,1);
-
    cdsClientestemp.CreateDataSet;
    cdsClientestemp.Open;
    cdsClientestemp.LogChanges:= False;
-
-
 
   TabControl1.TabPosition := TTabPosition.None;
   conexao;
   Image18.Visible := False;
  
-
    with FDqCarga do
    begin
      Close;
@@ -1537,8 +1351,6 @@ begin
      Open();
    end;
 
-
-
   if FDqCarga.IsEmpty then
    begin
      ShowMessage('Este é o seu primeiro acesso, '+#13+'faça a configuração do servidor e a carga das tabelas');
@@ -1546,12 +1358,10 @@ begin
    end
   else
    begin
-
      sEndereco     := FDqCarga.FieldByName('SERVIDOR').AsString;
      iLoja          := FDqCarga.FieldByName('LOJA').AsInteger;
      edtServidor.Text  := FDqCarga.FieldByName('SERVIDOR').AsString;
      edtLoja.Text         := FDqCarga.FieldByName('LOJA').AsString;
-
      if ((FDqCarga.FieldByName('CODLOGADO').AsInteger = 0)or(FDqCarga.FieldByName('CODLOGADO').AsString = '')) then
        begin
          TabControl1.ActiveTab := tbLogin;
@@ -1561,11 +1371,8 @@ begin
          TabControl1.ActiveTab := tbMenu;
          lbusuario.Text := FDqCarga.FieldByName('NOMELOGADO').AsString;
          codusuario := fdqCarga.FieldByName('CODLOGADO').AsInteger;
-
        end;
-
    end;
-
     with FDqCarga do
    begin
      Close;
@@ -1574,19 +1381,14 @@ begin
      Open();
    end;
 
-
     icodVenda     := FDqCarga.FieldByName('VENDA').AsInteger;
-
   atualizaColaborador;
-
  // CargaProduto;
 end;
-
 procedure TForm1.FormDestroy(Sender: TObject);
 begin
   permissao.DisposeOf;
 end;
-
 procedure TForm1.FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char;
   Shift: TShiftState);
 var
@@ -1596,43 +1398,33 @@ begin
       begin
         if ((tabControl1.ActiveTab <> tbMenu)) then
           begin
-
             if (tabControl1.ActiveTab = tbLogin) then
               begin
                 key := 0;
                 FormCloseQuery(Sender, Fechar);
                 Exit;
               end;
-
             if (tabControl1.ActiveTab = tbVenda) then
               begin
                 key := 0;
-
                 Exit;
               end;
             if tabControl1.ActiveTab = tbProdutos then
               begin
-
                 key := 0;
                 Exit;
-
               end;
             if tabControl1.ActiveTab = tbConfig then
               begin
-
                 key := 0;
                 Exit;
-
               end;
             if tabControl1.ActiveTab = tbVendaAbertas then
               begin
-
                 key := 0;
                 voltaMenu.ExecuteTarget(self);
                 Exit;
-
               end;
-
 
           end
         else
@@ -1640,19 +1432,53 @@ begin
            key := 0;
            FormCloseQuery(Sender, Fechar);
          end;
-
       end;
-
 end;
-
 procedure TForm1.FormShow(Sender: TObject);
 begin
     Image29.AnimateFloat('opacity',1,5
                        ,TAnimationType.InOut
                        ,TInterpolationType.Circular);
     Timer1.Enabled := True;
-end;
 
+
+
+     with FDqCarga do
+    begin
+      Close;
+      sql.Clear;
+      sql.Add('SELECT * FROM TEMA');
+      Open();
+    end;
+
+    case FDqCarga.FieldByName('IMAGEM').AsInteger of
+      1:begin
+        S.Bitmap := imgArmazem.Bitmap;
+        Image21.Bitmap := imgArmazem.Bitmap;
+      end;
+      2:begin
+        S.Bitmap := imgpet.Bitmap;
+        Image21.Bitmap := imgpet.Bitmap;
+      end;
+      3:begin
+        S.Bitmap := imgPraia.Bitmap;
+        Image21.Bitmap := imgPraia.Bitmap;
+      end;
+      4:begin
+        S.Bitmap := imgpet02.Bitmap;
+        Image21.Bitmap := imgpet02.Bitmap;
+      end;
+      5:begin
+        S.Bitmap := imgsup.Bitmap;
+        Image21.Bitmap := imgsup.Bitmap;
+      end;
+    end;
+
+
+
+
+
+end;
 procedure TForm1.gerarNota;
 var req, resp:TStringStream;
  strlist:TStringList;
@@ -1666,32 +1492,23 @@ var req, resp:TStringStream;
  const  user = 'cliente.sri';
  const  password = '698dc19d489c4e4db73e28a713eab07b';
  const  endPoint = 'http://srionline.com.br/mamba/mambaserver.dll';
-
 begin
-
     sId := '3123123';
-
     IdHTTP1:= TIdHTTP.Create(self);
     IdHTTP1.ConnectTimeout := 5000;
     IdHTTP1.ReadTimeout := 10000;
     idHttp1.Request.Clear;
-
     idHttp1.Request.BasicAuthentication := True;
     IdHTTP1.Request.Username := user;
     IdHTTP1.Request.Password := password;
     IdHTTP1.Request.Accept := 'text/javascript';
-
     IdHTTP1.Request.ContentEncoding := 'utf-8';
-
     jsonFinal := TJSONObject.Create;
     jsonFinal.AddPair('idequipamento','123123123');
-
     jsonCliente := TJSONObject.Create;
     jsonCliente.AddPair('email',sEmail);
     jsonCliente.AddPair('cpfcnpj',lbCliente.Text);
-
     jsonFinal.AddPair('cliente',jsonCliente);
-
     jsonPagamento := TJSONObject.Create;
     jsonPagamento.AddPair('nrParcelas','1');
     jsonPagamento.AddPair('datahora','now');
@@ -1702,16 +1519,12 @@ begin
     jsonPagamento.AddPair('rede','dinheiro');
     jsonPagamento.AddPair('atk','123456');
     jsonPagamento.AddPair('valor',TJSONNumber.Create(1));
-
     jsonFinal.AddPair('pagamento',jsonPagamento);
-
  {  strlist:= tstringlist.create;
     // strlist.Text:= ResultsArray.ToString;
     strlist.Text:= jsonFinal.ToString;
     strlist.SaveToFile('c:\temp\testeitem2.json');
     exit;     }
-
-
 
   //  strAutentic:= TStringStream.Create(ResultsArray.ToString);
     req:= TStringStream.Create(jsonFinal.ToString);
@@ -1725,7 +1538,6 @@ begin
         strlist.Text:= resp.DataString;
         strlist.SaveToFile('c:\temp\testeitem2.json');
         exit;}
-
         jso := TJSONObject.Create;
         jso.Parse(resp.Bytes,0);
           for jsoP in jso do
@@ -1741,7 +1553,6 @@ begin
                     jsoNnota:=  (jsoP.JsonValue as TJSONObject);
                     for jsopNota in jsoNnota do
                       begin
-
                         if jsopNota.JsonString.Value = 'infNFeSupl' then
                          begin
                            jsoInfNota := (jsopNota.JsonValue as TJSONObject);
@@ -1750,16 +1561,11 @@ begin
                                  if jsoPinfNota.JsonString.Value = 'qrCode' then
                                    qrCode := (jsoPinfNota.JsonValue as TJSONString ).Value
                                end;
-
                          end;
-
                       end
                   end;
 
-
-
              end;
-
         if(iRetorno = 1) then
           begin
             ShowMessage('Nota gerada :'+qrCode);
@@ -1770,9 +1576,7 @@ begin
           end;
       end;
 
-
 end;
-
 procedure TForm1.Image12Click(Sender: TObject);
 begin
   rctOpcaidade.Visible := False;
@@ -1781,29 +1585,20 @@ begin
   icodVenda      := inserirVenda();
   lbNvenda.Text  := 'N° Venda : '+FormatFloat('0',icodVenda);
   RetornaItens(icodVenda);
-
 end;
-
 procedure TForm1.Image13Click(Sender: TObject);
 begin
-
   rctOpcaidade.Visible := False;
   RctModal.Visible := False;
-
 end;
-
 procedure TForm1.Image14Click(Sender: TObject);
 begin
-  rctOpcaidade.Visible := False;
-  rctModalCpf.Visible  := False;
-  voltaMenu.ExecuteTarget(self);
+LayoutQtd.visible:=False;
 end;
-
 procedure TForm1.Image17Click(Sender: TObject);
 begin
   voltaMenu.ExecuteTarget(self);
 end;
-
 procedure TForm1.Image18Click(Sender: TObject);
 var req, resp:TStringStream;
  strResp:string;
@@ -1816,13 +1611,10 @@ var req, resp:TStringStream;
  const  user = 'cliente.sri';
  const  password = '698dc19d489c4e4db73e28a713eab07b';
  const  endPoint = 'http://srionline.com.br/mamba/mambaserver.dll';
-
 begin
-
      { rctOpcaidade.Visible := True;
       rctEmail.Visible := True;
       }
-
 
         //usar serial do cell
         sId := '123123123';
@@ -1832,14 +1624,11 @@ begin
         IdHTTP1.ConnectTimeout := 5000;
         IdHTTP1.ReadTimeout := 10000;
         idHttp1.Request.Clear;
-
         idHttp1.Request.BasicAuthentication := True;
         IdHTTP1.Request.Username := user;
         IdHTTP1.Request.Password := password;
         IdHTTP1.Request.Accept := 'text/javascript';
-
         IdHTTP1.Request.ContentEncoding := 'utf-8';
-
       //  strAutentic:= TStringStream.Create(ResultsArray.ToString);
         req:= TStringStream.Create();
         resp:= TStringStream.Create();
@@ -1857,10 +1646,7 @@ begin
                    if jsop.JsonString.Value = 'erro' then
                        erro := (jsoP.JsonValue as TJSONString ).Value;
 
-
-
                  end;
-
             if(iRetorno = 1) then
               begin
                enviaVenda;
@@ -1872,100 +1658,49 @@ begin
           end;
 
 
-
-
   voltaMenu.ExecuteTarget(self);
 end;
-
 procedure TForm1.Image19Click(Sender: TObject);
 begin
   abreConfig.ExecuteTarget(self);
 end;
-
 procedure TForm1.Image20Click(Sender: TObject);
 begin
  Layout50.visible := False;
 
-
 end;
-
 procedure TForm1.Image24Click(Sender: TObject);
 begin
    edtCpf.Text := '';
    rctOpcaidade.Visible := True;
    rctModalCpf.Visible := True;
-
 end;
-
 procedure TForm1.Image26Click(Sender: TObject);
 begin
-
     if StrToFloat(lb_valor.Text) <> 0 then
     begin
       lb_valor.Text := FormatFloat('0.00',0);
       Exit;
     end;
-
   rctOpcaidade.Visible := False;
   rctRecebimento.Visible := False;
 end;
-
 procedure TForm1.Image2Click(Sender: TObject);
 begin
   lbCliente.Text := '';
   lbTotal.Text   := 'Total : R$ 0,00';
   Image2.tag := 1;
   Image3.tag := 2;
-
-   if icodVenda <> 0 then
-   begin
-
-         with FDqCarga do
-     begin
-       Close;
-       sql.Clear;
-       sql.Add('SELECT * FROM COD_VENDA');
-       Open();
-     end;
-
-
-    icodVenda     := FDqCarga.FieldByName('VENDA').AsInteger;
-    icod:=        FDqCarga.FieldByName('COD_CADASTRO').AsInteger;
-
-    Image2.tag := 2;
-
-      RetornaVenda(icodVenda);
-      if iCod = 0 then
-      begin
-       lbCliente.Text := 'Cliente:  ' + 'Não indentificado';
-      end
-      else
-      begin
-        atualizaCliente(iCod.ToString);
-      end;
-      abreVenda.ExecuteTarget(self);
-
-   end
-   else
-   begin
-
-
-      diag.Show(TIconDialog.Question, 'Atenção ',
+  diag.Show(TIconDialog.Question, 'Atenção ',
                   'Deseja Indentificar Cliente?', 'Sim',Sim, 'Não', Nao);
+    abreVenda.ExecuteTarget(self);
 
-
-         abreVenda.ExecuteTarget(self);
-
-
-   end;
 
 end;
-
 procedure TForm1.Image31Click(Sender: TObject);
 begin
   LayoutQtd.Visible := False;
 end;
-
 procedure TForm1.Image32Click(Sender: TObject);
 begin
   if not permissao.VerifyCameraAccess then
@@ -1978,14 +1713,11 @@ begin
       end);
     end;
 
-
 end;
-
 procedure TForm1.Image33Click(Sender: TObject);
 begin
   LayoutQtdFracionado.Visible := False;
 end;
-
 procedure TForm1.Image3Click(Sender: TObject);
 begin
  Image3.tag := 1;
@@ -2000,7 +1732,6 @@ procedure TForm1.lancaItemDireto(cod:String);
 var rQtd,rDesconto,retorno,rTotal:Real;
  stotal:string;
 begin
-
   with  fdqCarga do
     begin
        close;
@@ -2009,7 +1740,6 @@ begin
        ParamByName('cod').AsString := cod;
        Open();
     end;
-
    if not fdqCarga.IsEmpty then
       begin
        rQtd      := StrToFloat('1');
@@ -2018,30 +1748,23 @@ begin
        stotal    := FloatToStr(rTotal);
        stotal    := StringReplace(stotal,',','.',[rfReplaceAll,rfIgnoreCase]);
 
-
        LancaItem(iLoja,0,cod,rDesconto,rQtd,FloatToStr(rTotal));
        RetornaVenda(icodVenda);
        voltaVenda.ExecuteTarget(self);
       end
    else
       ShowMessage('Opa! produto não encontrado.');
-
 end;
-
 procedure TForm1.Image4Click(Sender: TObject);
 begin
   abreVendas.ExecuteTarget(self);
   buscaVendas;
   listaDeVendas();
 end;
-
 procedure TForm1.Image6Click(Sender: TObject);
 begin
-
     abreProduto.ExecuteTarget(self);
-
 end;
-
 procedure TForm1.Image7Click(Sender: TObject);
 begin
     MessageDlg('Deseja Fazer Logoff do aplicativo agora ? ',
@@ -2051,7 +1774,6 @@ begin
         begin
         case BotaoPressionado of
             mrYes: begin
-
                 with fdqCarga do
                    begin
                      close;
@@ -2061,9 +1783,7 @@ begin
                      ParamByName('usu').AsString  := '';
                      ExecSQL;
                    end;
-
                   Application.Terminate;
-
               end;
             mrNo: begin
                 //
@@ -2072,7 +1792,6 @@ begin
         end
       );
 end;
-
 procedure TForm1.Image8Click(Sender: TObject);
  var rQtd,rDesconto,retorno,rTotal:Real;
  stotal:string;
@@ -2085,18 +1804,14 @@ begin
       stotal    := FloatToStr(rTotal);
       stotal    := StringReplace(stotal,',','.',[rfReplaceAll,rfIgnoreCase]);
 
-
       LancaItem(iLoja,0,codproduto,rDesconto,rQtd,FloatToStr(rTotal));
       rctOpcaidade.Visible := False;
       RctModal.Visible := False;
       RetornaVenda(icodVenda);
       voltaVenda.ExecuteTarget(self);
-
     end;
 
-
 end;
-
 procedure TForm1.imgMaisClick(Sender: TObject);
 begin
    try
@@ -2105,12 +1820,9 @@ begin
      lbQtd.Text := '01';
    end;
 
-
   if lbQtd.Text.ToInteger <1 then
     lbQtd.Text := '01';
-
 end;
-
 procedure TForm1.img_backspaceClick(Sender: TObject);
 begin
     Tecla_Backspace();
@@ -2124,24 +1836,19 @@ begin
                 svalor := lbl_valor.Text;  // 5.200,00
                 svalor := StringReplace(svalor, '.', '', [rfReplaceAll]); // 5200,00
                 svalor := StringReplace(svalor, ',', '', [rfReplaceAll]); // 520000
-
                 if Length(svalor) > 1 then
                         svalor := Copy(svalor, 1, length(svalor) - 1)
                 else
                         svalor := '0';
-
                 lbl_valor.Text := FormatFloat('#,##0.000', StrToFloat(svalor) / 1000);
         end;
 end;
-
 procedure TForm1.inserirItem(codproduto: String; rQtd, rDesconto: Real);
 var tb:TFDQuery;
     seq:Integer;
 begin
-
   tb := TFDQuery.Create(self);
   tb.Connection := FDConnection1;
-
 
   with tb do
    begin
@@ -2151,7 +1858,6 @@ begin
      ParamByName('COD').AsString := codProduto;
      Open();
    end;
-
    if RctModal.Tag = 1 then
      begin
        with fdqCarga do
@@ -2193,9 +1899,7 @@ begin
           ExecSQL;
          end;
 
-
      end;
-
   { if rctLancaProduto.Tag = 2 then
      begin
        with fdqCarga do
@@ -2219,24 +1923,17 @@ begin
           ParamByName('desc').AsFloat := StrToFloat(edtDescReal.Text);
           ExecSQL;
          end;
-
      end;
-
               }
-
    if not Assigned(tb) then
       FreeAndNil(tb);
-
 end;
-
 function TForm1.inserirVenda: Integer;
 var tb:TFDQuery;
     seq:Integer;
 begin
-
    tb := TFDQuery.Create(self);
    tb.Connection := FDConnection1;
-
    try
      with tb do
        begin
@@ -2261,11 +1958,9 @@ begin
         ParamByName('desconto').AsFloat    := 0;
         ExecSQL;
        end;
-
    except
       Result := -1;
    end;
-
    with tb do
     begin
       Close;
@@ -2274,15 +1969,11 @@ begin
       ParamByName('P').AsString := 'F';
       Open();
     end;
-
    Result := tb.FieldByName('ID').AsInteger;
-
   if Assigned(TB) then
     FreeAndNil(TB);
 
-
 end;
-
 procedure TForm1.Label18Click(Sender: TObject);
 var fd:TFDQuery;
 begin
@@ -2296,13 +1987,10 @@ begin
      ParamByName('senha').AsString := Trim(edtSenha.Text);
      Open();
    end;
-
   if not fdqCarga.IsEmpty then
    begin
-
      fd := TFDQuery.Create(self);
      fd.Connection := FDConnection1;
-
      abreMenu.ExecuteTarget(Self);
     with fd do
      begin
@@ -2313,26 +2001,27 @@ begin
        ParamByName('USU').AsString     := fdqCarga.FieldByName('NOME').AsString;
        ExecSQL;
      end;
-
      edtLogin.Text := '';
      edtSenha.Text := '';
      codusuario := fdqCarga.FieldByName('CODIGO').AsInteger;
      lbUsuario.Text  := fdqCarga.FieldByName('NOME').AsString;
      atualizaProdutos;
      CargaProduto('',True,0);
-
      //criarBotesGrupo;
      if cdsProdtemp.IsEmpty then
       begin
         ShowMessage('Tabela de produtos fazia');
       end;
-
    end
   else
    begin
      ShowMessage('Login ou senha Incorreto');
      Exit
    end;
+end;
+procedure TForm1.Label54Click(Sender: TObject);
+begin
+ tabControl1.ActiveTab := tbTemas;
 end;
 
 function TForm1.LancaItem(loja, resp: Integer; codProduto: String; desconto,
@@ -2360,16 +2049,12 @@ var sErro, sNumPedido,sRetorno, sCupom, sLinha, sCab : string;
     sDesconto,sQtd,sListaPedido: string;
     valor:Real;
 begin
-
   try
-
     sQtd := FloatToStr(qtd);
     sQtd := StringReplace(sQtd,',','.',[rfReplaceAll]);
     Total := StringReplace(Total,',','.',[rfReplaceAll]);
     sDesconto := FloatToStr(desconto);
     sDesconto := StringReplace(sDesconto,',','.',[rfReplaceAll]);
-
-
 
 
     Retorno := TStringStream.Create(EmptyStr);
@@ -2383,7 +2068,6 @@ begin
     sListaPedido:= StringReplace(sListaPedido,'?ttl?',Total,[rfReplaceAll]);
     sListaPedido:= StringReplace(sListaPedido,'?obs?','',[rfReplaceAll]);
    Solicit := TStringStream.Create(sListaPedido, TEncoding.UTF8);
-
   IdHTTP1.Request.ContentType := 'text/xml';
   IdHTTP1.Request.Charset := 'utf-8';
   IdHTTP1.ConnectTimeout := 5000;
@@ -2396,37 +2080,26 @@ begin
     except
       exit;
     end;
-
     sRetorno:= Retorno.DataString;
-
 
     {if Retorno = sNumPedido
        then exit;
-
        Retorno := sNumPedido;
      }
-
     sRetorno := StringReplace(sRetorno,'&gt;','>',[rfReplaceAll,rfIgnoreCase]);
     sRetorno := StringReplace(sRetorno,'&lt;','<',[rfReplaceAll,rfIgnoreCase]);
    {
     Memo1.Lines.Text := sRetorno;
     Exit;  }
-
     iPosInicial := Pos('<return xsi:type="xsd:int">',sRetorno)+27;
     iPosFinal   := Pos('</return>',sRetorno);
     sRetorno := copy(sRetorno,iPosInicial,iPosFinal-iPosInicial);
 
-
-
   except
-
   end;
-
   Result := StrToFloat(sRetorno);
 
-
 end;
-
 procedure TForm1.LancaVenda;
 const sListaProduto = '<soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:uPOSIntf-IPOS">'
 +'<soapenv:Header/>'
@@ -2438,23 +2111,19 @@ const sListaProduto = '<soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSc
 +'</urn:PedidoBalcao>'
 +'</soapenv:Body>'
 +'</soapenv:Envelope>';
-
 var sErro, sNumPedido,sRetorno,sRetorno2, sCupom, sLinha, sCab : string;
     iTermino, iPosInicial, iPosFinal,iPosInicial2, iPosFinal2, i, iTamanho, iItem :integer;
     LItem : TListViewItem;
     Retorno ,Retorno2, Solicit: TStringStream;
     sListaPedido: string;
 begin
-
   try
-
     Retorno := TStringStream.Create(EmptyStr);
     sListaPedido:= sListaProduto;
     sListaPedido:= StringReplace(sListaPedido,'?lja?',IntToStr(iLoja),[rfReplaceAll]);
     sListaPedido:= StringReplace(sListaPedido,'?cpf?','',[rfReplaceAll]);
     sListaPedido:= StringReplace(sListaPedido,'?cbl?',IntToStr(iCod_Cadastro),[rfReplaceAll]);
     Solicit := TStringStream.Create(sListaPedido, TEncoding.UTF8);
-
     IdHTTP1.Request.ContentType := 'text/xml';
     IdHTTP1.Request.Charset := 'utf-8';
     IdHTTP1.ConnectTimeout := 5000;
@@ -2468,17 +2137,13 @@ begin
     except
       exit;
     end;
-
     sRetorno:= Retorno.DataString;
-
 
     sRetorno := StringReplace(sRetorno,'&gt;','>',[rfReplaceAll,rfIgnoreCase]);
     sRetorno := StringReplace(sRetorno,'&lt;','<',[rfReplaceAll,rfIgnoreCase]);
 
-
     iPosInicial := Pos('<return xsi:type="xsd:int">',sRetorno)+27;
     iPosFinal   := Pos('</return>',sRetorno);
-
 
     sRetorno := copy(sRetorno,iPosInicial,iPosFinal-iPosInicial);
     icodVenda := StrToInt(sRetorno);
@@ -2486,7 +2151,6 @@ begin
     sVenda := icodVenda.ToString;
    { Memo1.Lines.Text := sRetorno;
     Exit; }
-
       with FDqCarga do
     begin
       Close;
@@ -2506,21 +2170,15 @@ begin
        sql.Add(',:COD)');
       ParamByName('VENDA').AsInteger := icodVenda;
       ParamByName('COD').AsInteger := iCod_Cadastro;
-
       ExecSQL;
     end;
-
-
-
 
 
   except
     ShowMessage('Falha no lançamento da venda');
   end;
 
-
 end;
-
 procedure TForm1.EnviaRecebimento;
 const sListaProduto = '<soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:uSRIIntf-ISRI">'
                      +'<soapenv:Header/>'
@@ -2544,16 +2202,13 @@ const sListaProduto = '<soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSc
                      +'</urn:GravaRecDav>'
                      +'</soapenv:Body>'
                      +'</soapenv:Envelope>';
-
 var sErro, sNumPedido,sRetorno,sRetorno2, sCupom, sLinha, sCab : string;
     iTermino, iPosInicial, iPosFinal,iPosInicial2, iPosFinal2, i, iTamanho, iItem :integer;
     LItem : TListViewItem;
     Retorno ,Retorno2, Solicit: TStringStream;
     sListaPedido: string;
 begin
-
   try
-
     Retorno := TStringStream.Create(EmptyStr);
     sListaPedido:= sListaProduto;
     sListaPedido:= StringReplace(sListaPedido,'?lja?',IntToStr(iLoja),[rfReplaceAll]);
@@ -2569,9 +2224,7 @@ begin
     sListaPedido:= StringReplace(sListaPedido,'?CNPJ?','00000',[rfReplaceAll]);
     sListaPedido:= StringReplace(sListaPedido,'?IREMT?','0',[rfReplaceAll]);
 
-
     Solicit := TStringStream.Create(sListaPedido, TEncoding.UTF8);
-
     IdHTTP1.Request.ContentType := 'text/xml';
     IdHTTP1.Request.Charset := 'utf-8';
     IdHTTP1.ConnectTimeout := 5000;
@@ -2585,17 +2238,13 @@ begin
     except
       exit;
     end;
-
     sRetorno:= Retorno.DataString;
-
 
     sRetorno := StringReplace(sRetorno,'&gt;','>',[rfReplaceAll,rfIgnoreCase]);
     sRetorno := StringReplace(sRetorno,'&lt;','<',[rfReplaceAll,rfIgnoreCase]);
 
-
     iPosInicial := Pos('<return xsi:type="xsd:int">',sRetorno)+27;
     iPosFinal   := Pos('</return>',sRetorno);
-
 
     sRetorno := copy(sRetorno,iPosInicial,iPosFinal-iPosInicial);
     if StrToInt(sRetorno) = 1 then
@@ -2603,22 +2252,91 @@ begin
     else
       diag.Show(TIconDialog.Error,'Erro no Recebimento','' )
 
-
    { Memo1.Lines.Text := sRetorno;
     Exit; }
 
-
   except
-
     diag.Show(TIconDialog.Error,'Falha no lançamento da venda','' );
   end;
 
-
 end;
-
 procedure TForm1.lbl_tecla0Click(Sender: TObject);
 begin
   Tecla_Numero(sender);
+end;
+procedure TForm1.lbxMesasItemClick(const Sender: TCustomListBox;
+  const Item: TListBoxItem);
+begin
+  case Item.Tag of
+    1:begin
+        S.Bitmap := imgArmazem.Bitmap;
+        Image21.Bitmap := imgArmazem.Bitmap;
+        lbusuario.FontColor := claWhite;
+        SpeedButton1.IconTintColor := claWhite;
+        Label22.FontColor := claWhite;
+        Label54.FontColor := claWhite;
+        FillRGBEffect1.Color := claWhite;
+      end;
+    2:begin
+        S.Bitmap := imgpet.Bitmap;
+        Image21.Bitmap := imgpet.Bitmap;
+        lbusuario.FontColor := claBlack;
+        SpeedButton1.IconTintColor := claBlack;
+        Label22.FontColor := claBlack;
+        Label54.FontColor := claBlack;
+        FillRGBEffect1.Color := claBlack;
+      end;
+    3:begin
+        S.Bitmap := imgPraia.Bitmap;
+        Image21.Bitmap := imgPraia.Bitmap;
+        lbusuario.FontColor := claWhite;
+        SpeedButton1.IconTintColor := claWhite;
+        Label22.FontColor := claWhite;
+        Label54.FontColor := claWhite;
+        FillRGBEffect1.Color := claWhite;
+      end;
+    4:begin
+        S.Bitmap := imgpet02.Bitmap;
+        Image21.Bitmap := imgpet02.Bitmap;
+        lbusuario.FontColor := claBlack;
+        SpeedButton1.IconTintColor := claBlack;
+        Label22.FontColor := claBlack;
+        Label54.FontColor := claBlack;
+        FillRGBEffect1.Color := claBlack;
+      end;
+    5:begin
+        S.Bitmap := imgsup.Bitmap;
+        Image21.Bitmap := imgsup.Bitmap;
+        lbusuario.FontColor := claBlack;
+        SpeedButton1.IconTintColor := claBlack;
+        Label22.FontColor := claBlack;
+        Label54.FontColor := claBlack;
+        FillRGBEffect1.Color := claBlack;
+      end;
+  end;
+
+  with FDqCarga do
+    begin
+      close;
+      sql.Clear;
+      sql.Add('DELETE FROM TEMA');
+      ExecSQL;
+    end;
+
+  with FDqCarga do
+    begin
+      close;
+      sql.Clear;
+      sql.Add('INSERT INTO TEMA (IMAGEM) VALUES (:IMG)');
+      ParamByName('IMG').AsInteger := Item.Tag;
+      ExecSQL;
+    end;
+
+
+
+   tabControl1.ActiveTab := tbMenu;
+
+
 end;
 
 procedure TForm1.listaDeVendas;
@@ -2626,9 +2344,7 @@ procedure TForm1.listaDeVendas;
   Litem:TListViewItem;
   txt:TListItemText;
   img:TListItemImage;
-
 begin
-
 
    if not cdsVendas.IsEmpty then
      begin
@@ -2637,106 +2353,77 @@ begin
        while not cdsVendas.Eof do
          begin
            Litem := lvPedidos.Items.Add;
-
            with Litem do
             begin
-
                txt := TListItemText(Objects.FindDrawable('Text1'));
                txt.Text := 'Pedido : '+FormatFloat('00000000',cdsVendasCOD_ORCAMENTO.AsInteger);
                txt.Font.Size := 11;
                txt.Font.Style := [TFontStyle.fsBold];
-
                txt := TListItemText(Objects.FindDrawable('Text2'));
                txt.Text := 'Data do Pedido : '+FormatDateTime('dd/mm/yyyy',cdsVendasDATA.AsDateTime);
                txt.Font.Size := 10;
-
                img := TListItemImage(Objects.FindDrawable('Image4'));
                img.Bitmap := Image16.Bitmap;
-
                img := TListItemImage(Objects.FindDrawable('Image5'));
                img.Bitmap := imgEditar.Bitmap;
-
                txt := TListItemText(Objects.FindDrawable('Text3'));
                txt.Text := 'Valor : '+FormatFloat('0.00',cdsVendasTOTAL.AsFloat);
                txt.Font.Size := 11;
 
-
                {txt := TListItemText(Objects.FindDrawable('Text3'));
                txt.Text := tb.FieldByName('CANCELADO').AsString;
                txt.Font.Size := 10;}
-
                LItem.Detail := cdsVendasCOD_ORCAMENTO.AsString;
-
             end;
            cdsVendas.Next;
          end;
      end;
 
-
-
 end;
-
 procedure TForm1.listaItensMesa;
 var LItem:TListViewItem;
     txt:TListItemText;
     img:TListItemImage;
 begin
-
   lvProdutosPedidos.Items.Clear;
-
   while not cdsItensVenda.eof do
    begin
-
     LItem := lvProdutosPedidos.Items.Add;
-
     with LItem do
      begin
-
        txt := TListItemText(Objects.FindDrawable('Text1'));
        txt.Text := cdsItensVendaDESCRICAO.AsString;
        txt.WordWrap := False;
        txt.Font.Size := 12;
        txt.Font.Style := [TFontStyle.fsBold];
-
        txt := TListItemText(Objects.FindDrawable('Text3'));
        txt.Text := formatfloat('0.00',cdsItensVendaVENDA.AsFloat)
        +'  *  '+formatfloat('0.00',cdsItensVendaQTD.AsFloat)
        +'  =  '+formatfloat('0.00',cdsItensVendaTOTAL.AsFloat);
        txt.WordWrap := true;
        txt.Font.Size := 12;
-
        img := TListItemImage(Objects.FindDrawable('Image2'));
        img.Bitmap := imgExcluir.Bitmap;
-
        LItem.Detail := cdsItensVendaITEM.AsString;
-
      end;
-
       cdsItensVenda.Next;
    end;
-
 end;
-
 procedure TForm1.listarItens(busca: string; ind_clear: boolean; delay : integer);
  var tb:TFDQuery;
 begin
       if lvProdutos.TagString = '1' then
         exit;
-
     lvprodutos.TagString := '1'; // Em processamento...
-
     if ind_clear then
     begin
         lvprodutos.Items.Clear;
         lvprodutos.Tag := 0;
     end;
-
     lvprodutos.BeginUpdate;
-
     TThread.CreateAnonymousThread(procedure
     begin
         sleep(delay);
-
         tb.Active := false;
         tb.SQL.Clear;
         tb.SQL.Add('select');
@@ -2746,51 +2433,38 @@ begin
         tb.SQL.Add(',descricao');
         tb.SQL.Add(',venda');
         tb.SQL.Add('FROM PRODUTO P');
-
         // Filtro...
         if busca <> '' then
         begin
             tb.SQL.Add('WHERE P.DESCRICAO LIKE ''%'' || :BUSCA || ''%'' ');
             tb.ParamByName('BUSCA').Value := busca;
         end;
-
         tb.SQL.Add('ORDER BY DESCRICAO');
         tb.ParamByName('pnPagina').Value := lvprodutos.Tag * 25;
         tb.ParamByName('pnRegistro').Value := 25;
         tb.Active := true;
-
         lvprodutos.Tag := lvprodutos.Tag + 1;
-
         while NOT tb.Eof do
         begin
             TThread.Synchronize(nil, procedure
             begin
-
                 addListaProduto(tb.FieldByName('COD_PRODUTO').AsString,
                            tb.FieldByName('DESCRICAO').AsString,
                            tb.FieldByName('VALOR').AsFloat
                            );
-
             end);
-
             tb.Next;
         end;
-
         // Nao carregar mais dados...
         if tb.RecordCount = 0 then
             lvprodutos.Tag := -1;
-
         lvprodutos.TagString := ''; // Processamento terminou...
-
         TThread.Synchronize(nil, procedure
         begin
             lvprodutos.EndUpdate;
-
         end);
-
     end).Start;
 end;
-
 procedure TForm1.listaVendas;
 const sListaProduto = '<soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:uRestorIntf-IRestor">'
                      +'<soapenv:Header/>'
@@ -2801,21 +2475,17 @@ const sListaProduto = '<soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSc
                      +'</urn:retornaVendas>'
                      +'</soapenv:Body>'
                      +'</soapenv:Envelope>';
-
 var sErro, sNumPedido,sRetorno,sRetorno2, sCupom, sLinha, sCab : string;
     iTermino, iPosInicial, iPosFinal,iPosInicial2, iPosFinal2, i, iTamanho, iItem :integer;
     LItem : TListViewItem;
     Retorno ,Retorno2, Solicit: TStringStream;
     sListaPedido: string;
 begin
-
   try
-
     Retorno := TStringStream.Create(EmptyStr);
     sListaPedido:= sListaProduto;
     sListaPedido:= StringReplace(sListaPedido,'?lja?',IntToStr(iLoja),[rfReplaceAll]);
     Solicit := TStringStream.Create(sListaPedido, TEncoding.UTF8);
-
     IdHTTP1.Request.ContentType := 'text/xml';
     IdHTTP1.Request.Charset := 'utf-8';
     IdHTTP1.ConnectTimeout := 5000;
@@ -2828,55 +2498,40 @@ begin
     except
       exit;
     end;
-
     sRetorno:= Retorno.DataString;
-
 
     sRetorno := StringReplace(sRetorno,'&gt;','>',[rfReplaceAll,rfIgnoreCase]);
     sRetorno := StringReplace(sRetorno,'&lt;','<',[rfReplaceAll,rfIgnoreCase]);
 
-
     iPosInicial := Pos('<?xml version="1.0" standalone="yes"?>  ',sRetorno)+40;
     iPosFinal   := Pos('</xml>',sRetorno);
-
     sRetorno := copy(sRetorno,iPosInicial,iPosFinal-iPosInicial);
     Retorno := TStringStream.Create(sRetorno);
     cdsVendas.Close;
     cdsVendas.CreateDataSet;
-
     cdsVendas.LoadFromStream(Retorno);
-
-
 
   except
     ShowMessage('Falha no lançamento da venda');
     diag.Show(TIconDialog.Error,'Falha no lançamento da venda','' );
   end;
 
-
-
 end;
-
 procedure TForm1.lvFinalizadoraItemClickEx(const Sender: TObject;
   ItemIndex: Integer; const LocalClickPos: TPointF;
   const ItemObject: TListItemDrawable);
-
 var tb:TFDQuery;
     seq:Integer;
     Produto,
  HabilitaImpressao,
  Parcelas,TipoParcelamento:String;
 begin
-
    tipoPagamento :=  lvFinalizadora.Items[lvFinalizadora.Selected.index].Detail;
-
    if tipoPagamento = 'D' then
      begin
         tb := TFDQuery.Create(self);
         tb.Connection := FDConnection1;
-
         try
-
           with fdqCarga do
            begin
             Close;
@@ -2895,39 +2550,27 @@ begin
             ParamByName('cod_finalizadora').AsInteger  := 1;
             ParamByName('finalizadora').AsString       := tipoPagamento;
             ParamByName('valor').AsFloat               := rTotal;
-
             ExecSQL;
            end;
-
            Label14.Text := 'SALDO R$ '+FormatFloat('0.00',0);
-
         except
            ShowMessage('falha ao tentar receber !!!');
         end;
 
-
      end;
 
 
-
-
  { tipoPagamento :=  lvFinalizadora.Items[lvFinalizadora.Selected.index].Detail;
-
   rctOpcaidade.Visible :=True;
   rctRecebimento.Visible :=True;  }
 
-
 end;
-
-
 
 {$IFNDEF __TTASK__}
 procedure TForm1.timerTEFTimer(Sender: TObject);
 var res:integer;
-
 begin
   timerTEF.Enabled:=false;
-
   try
    if(TEFExecuteFlag>0)then begin
       res := transacao.response;
@@ -2944,14 +2587,11 @@ begin
     end else begin
       timerTEF.Enabled:=True;
     end;
-
   except
       on e: exception do begin
       ShowMessage('Erro=>'+e.Message);
     end;
-
   end;
-
 end;
 {$ENDIF}
 procedure TForm1.lvPedidosItemClickEx(const Sender: TObject; ItemIndex: Integer;
@@ -2964,9 +2604,7 @@ begin
                if TListItemImage(ItemObject).Name = 'Image5' then
                  begin
                   Image2.tag := 2;
-
                    icodVenda := StrToInt(lvPedidos.Items[lvPedidos.Selected.Index].Detail);
-
 
                    RetornaVenda(icodVenda);
                    atualizaCliente(iCod_Cadastro.ToString);
@@ -2976,14 +2614,10 @@ begin
      end;
 
 
-
-
 end;
-
 procedure TForm1.lvProdutosItemClick(const Sender: TObject;
   const AItem: TListViewItem);
 begin
-
     lbQtd.Text        := '01';
     lbl_valor.Text        := FormatFloat('0.000',0);
     if cdsProdtemp.Locate('COD_PRODUTO',lvProdutos.Items[lvProdutos.Selected.Index].Detail,[]) then
@@ -2995,9 +2629,22 @@ begin
         codproduto        := lvProdutos.Items[lvProdutos.Selected.Index].Detail;
         //LayoutQtd.Visible := True;
         //LayoutQtd.Tag     := 1;
-        LayoutQtdFracionado.Visible := True;
-        Exit;
 
+
+         if cdsProdtemp.FieldByName('UNIDADE').AsString = 'KG' then
+         begin
+             LayoutQtdFracionado.Visible := True;
+
+         end
+         else
+         begin
+
+            LayoutQtd.Visible := True;
+         end;
+
+
+
+        Exit;
       end
      else
       begin
@@ -3006,7 +2653,6 @@ begin
       end;
     {edtquantidade.Text   := '';
     Edit4.Text           := '';
-
     with  fdqCarga do
      begin
        close;
@@ -3015,7 +2661,6 @@ begin
        ParamByName('cod').AsString := lvProdutos.Items[lvProdutos.Selected.Index].Detail;
        Open();
      end;
-
      if not fdqCarga.IsEmpty then
       begin
         desc              := fdqCarga.FieldByName('DESCRICAO').AsString;
@@ -3026,14 +2671,12 @@ begin
         codproduto        := lvProdutos.Items[lvProdutos.Selected.Index].Detail;
         LayoutQtd.Visible := True;
         Exit;
-
       end
      else
       begin
         ShowMessage('Item Não encontrado');
       end;
             }
-
 {    if cdsProdtemp.Locate('COD_PRODUTO',lvProdutos.Items[lvProdutos.Selected.Index].Detail,[]) then
       begin
         desc              := cdsProdtemp.FieldByName('DESCRICAO').AsString;
@@ -3043,14 +2686,12 @@ begin
         codproduto        := lvProdutos.Items[lvProdutos.Selected.Index].Detail;
         LayoutQtd.Visible := True;
         Exit;
-
       end
      else
       begin
         ShowMessage('Item Não encontrado');
       end;}
 end;
-
 procedure TForm1.Tecla_Numero(lbl: TObject);
 var
    valorTeclado : string;
@@ -3060,41 +2701,30 @@ begin
        valorTeclado := lbl_valor.Text;
        valorTeclado := StringReplace(valorTeclado, '.', '', [rfReplaceAll]);
        valorTeclado := StringReplace(valorTeclado, ',', '', [rfReplaceAll]);
-
        valorTeclado := valorTeclado + TLabel(lbl).Text;
-
        lbl_valor.Text := FormatFloat('#,##0.000', StrToFloat(valorTeclado) / 1000);
       end;
 end;
-
 
 procedure TForm1.lvProdutosPedidosItemClickEx(const Sender: TObject;
   ItemIndex: Integer; const LocalClickPos: TPointF;
   const ItemObject: TListItemDrawable);
 begin
-
    if TListView(sender).Selected <> nil then
      begin
-
          if ItemObject is TListItemImage then
             begin
-
                if TListItemImage(ItemObject).Name = 'Image2' then
                  begin
                     diag.Show(TIconDialog.Question, 'Atenção',
                     'Deseja Excluir item?', 'Sim',ClickYes, 'Não', ClickNo);
-
                  end;
                   // cancelaItem(strtoint(lvProdutosPedido.Items[lvProdutosPedido.Selected.index].Detail),StrToInt(lbNpedido.Text));
                  end;
-
             end;
 
 
-
-
 end;
-
 procedure TForm1.lvProdutosPedidosUpdateObjects(const Sender: TObject;
   const AItem: TListViewItem);
   var txt:TlistitemText;
@@ -3108,10 +2738,8 @@ begin
       txt.PlaceOffset.y := 4;
       txt.WordWrap := True;
 
-
     end;
 end;
-
 procedure TForm1.lvProdutosUpdateObjects(const Sender: TObject;
   const AItem: TListViewItem);
  var
@@ -3124,10 +2752,8 @@ procedure TForm1.lvProdutosUpdateObjects(const Sender: TObject;
         emb : TListItemEmbeddedControl;
         linha : TLine;
 begin
-
     with AItem do
     begin
-
 
         Height := 70;
        {
@@ -3140,14 +2766,12 @@ begin
         linha.Visible := true;
         linha.Opacity := 0.7;
 
-
         emb := TListItemEmbeddedControl.Create(AItem);
         emb.Width := 1;
         emb.Height := 20;
         emb.PlaceOffset.X := 20;
         emb.PlaceOffset.Y := 1;
         emb.Container.AddObject(linha); }
-
 
         // Imagem borda redonda...
         img               := TListItemImage(Objects.FindDrawable('Image4'));
@@ -3159,7 +2783,6 @@ begin
         ind_disponivel    := img.TagString;
         img.Opacity       := 0.8;
         img.Bitmap        := imgRedonda.Bitmap;
-
 
         // iniciais da descricao...
         txt               := TListItemText(Objects.FindDrawable('Text2'));
@@ -3174,7 +2797,6 @@ begin
         txt.TextColor     := $FFD2D2D2;
         txt.Font.Style    := [TFontStyle.fsBold];
 
-
         // Descricao do item...
         txt               := TListItemText(Objects.FindDrawable('Text1'));
         txt.Width         := lvProdutos.Width - 65;
@@ -3188,7 +2810,6 @@ begin
         txt.Opacity       := 0.6;
         txt.Font.Style    := [TFontStyle.fsBold];
 
-
         // Preco...
         txt               := TListItemText(Objects.FindDrawable('Text3'));
         txt.Width         := 210;
@@ -3200,7 +2821,6 @@ begin
         txt.Font.Size     := 12;
         txt.Opacity       := 0.6;
 
-
 {
         // valor e vencimento
         txt := TListItemText(Objects.FindDrawable('TxtSub'));
@@ -3209,18 +2829,14 @@ begin
         txt.PlaceOffset.Y := 32;
         txt.PlaceOffset.X := 83;
         txt.Font.Size := 11;
-
         if ind_disponivel = 'N' then
             txt.TextColor := $FFD2D2D2
         else
             txt.TextColor := $FF8D8D8D;
-
        }
-
         {
         // imagem pago...
         img := TListItemImage(Objects.FindDrawable('ImgPago'));
-
         if img.TagString = 'P' then
         begin
             img.ScalingMode := TImageScalingMode.Stretch;
@@ -3233,17 +2849,13 @@ begin
         end
         else
             img.Visible := true;     }
-
     end;
 end;
-
 function TForm1.pegarItem(codVenda: integer): integer;
 var fdquery:TFDQuery;
 begin
-
   fdquery := TFDQuery.Create(self);
   fdquery.Connection := FDConnection1;
-
   with fdquery do
     begin
       close;
@@ -3252,12 +2864,9 @@ begin
       ParamByName('pcod').AsInteger := codVenda;
       Open();
     end;
-
     Result := fdquery.RecordCount + 1;
 
-
 end;
-
 procedure TForm1.RandomValor;
 var strAux:string;
     i:integer;
@@ -3268,29 +2877,31 @@ for i := 1 to 3 do begin
 end;
 cdsPedidoTOTAL.AsString := strAux;
 
-
 end;
-
 procedure TForm1.btnDesistirClick(Sender: TObject);
 begin
   diag.Show(TIconDialog.Question, 'Atenção ',
                   'Deseja Desestir da Venda?', 'Sim',ClickSim, 'Não', ClickNao);
-
    { diag.TagString := '000001';
     diag.Show(TIconDialog.Question, 'Pergunta',
               'Confirma a exclusão dos clientes?', 'Sim', ClickOK, 'Não', ClickCancel);
      }
-
 end;
-
 procedure TForm1.ClickOK(Sender: TObject);
 begin
    Application.Terminate;
 end;
-
 procedure TForm1.ClickSim(Sender: TObject);
 begin
  voltaMenu.ExecuteTarget(self);
+ with FDqCarga do
+    begin
+      Close;
+      sql.Clear;
+      sql.Add('DELETE FROM mov_temp');
+      ExecSQL;
+    end;
+
 end;
 procedure TForm1.Sim(Sender: TObject);
 begin
@@ -3298,19 +2909,21 @@ begin
 end;
 procedure TForm1.ClickSimCliente(Sender: TObject);
 begin
-
   rctModalCpf.Visible := False;
   TabControl1.ActiveTab := tbCadCliente;
 end;
-
 procedure TForm1.ClickYes(Sender: TObject);
-var
+var LItem:TListViewItem;
+    txt:TListItemText;
+    img:TListItemImage;
+    stotal : string;
 valor:Real;
 begin
-
  // cancela item
- valor := cancelaItem(iLoja,strtoint(lvProdutosPedidos.Items[lvProdutosPedidos.Selected.index].Detail),icodVenda);
 
+ if Image2.tag = 2 then
+ begin
+  valor := cancelaItem(iLoja,strtoint(lvProdutosPedidos.Items[lvProdutosPedidos.Selected.index].Detail),icodVenda);
  if valor < 0 then
    begin
     ShowMessage('falha na exclusão do item');
@@ -3320,38 +2933,158 @@ begin
      RetornaVenda(icodVenda);
    end;
 // fim do cancela ite
+ end
+ else
+ begin
+    with FDqCarga do
+    begin
+      Close;
+      sql.Clear;
+      sql.Add('DELETE FROM mov_temp where cod_produto = :pcod');
+      ParamByName('pcod').AsString  := lvProdutosPedidos.Items[lvProdutosPedidos.Selected.index].Detail;
+      ExecSQL;
+    end;
+
+    with FDqCarga do
+   begin
+   Close;
+   sql.Clear;
+   sql.Add('SELECT * FROM mov_temp');
+   Open();
+   end;
+
+
+
+
+
+    lvProdutosPedidos.Items.Clear;
+  while not fdqCarga.eof do
+   begin
+    LItem := lvProdutosPedidos.Items.Add;
+    with LItem do
+     begin
+       txt := TListItemText(Objects.FindDrawable('Text1'));
+       txt.Text := FDqCarga.FieldByName('DESCRICAO').asString;
+       txt.WordWrap := False;
+       txt.Font.Size := 12;
+       txt.Font.Style := [TFontStyle.fsBold];
+       txt := TListItemText(Objects.FindDrawable('Text3'));
+       txt.Text := formatfloat('0.00',FDqCarga.FieldByName('VENDA').AsFloat)
+       +'  *  '+formatfloat('0.00',FDqCarga.FieldByName('QTD').AsFloat)
+       +'  =  '+formatfloat('0.00',FDqCarga.FieldByName('TOTAL').AsFloat);
+       txt.WordWrap := true;
+       txt.Font.Size := 12;
+       img := TListItemImage(Objects.FindDrawable('Image2'));
+       img.Bitmap := imgExcluir.Bitmap;
+       LItem.Detail := FDqCarga.FieldByName('COD_PRODUTO').AsString;
+      // LItem.Tag := FDqCarga.FieldByName('COD_PRODUTO').AsInteger;
+
+     end;
+     fdqcarga.Next;
+   end;
+
+
+       with FDqCarga do
+     begin
+       Close;
+       sql.Clear;
+       sql.Add('SELECT SUM(TOTAL) AS TOTAL from mov_temp');
+       Open();
+     end;
+
+     if FDqCarga.FieldByName('TOTAL').AsString = '' then
+     begin
+      lbTotal.Text :='TOTAL : R$ 0,00';
+     end
+     else
+     begin
+      lbTotal.Text :='TOTAL : R$ '+formatfloat('0.00',FDqCarga.FieldByName('TOTAL').AsFloat);
+     end;
+
+
+
+
+
+
+ end;
 
 end;
-
 procedure TForm1.ClickCancel(Sender: TObject);
 begin
-
 end;
-
 procedure TForm1.ClickNao(Sender: TObject);
 begin
  rctModalCpf.Visible := False;
 end;
-
 procedure TForm1.ClickNo(Sender: TObject);
 begin
-
 end;
 procedure TForm1.Nao(Sender: TObject);
 begin
- iCod_Cadastro := 0;
- LancaVenda;
-lvProdutosPedidos.Items.Clear;
+ 
 rctModalCpf.Visible := False;
+lbCliente.Text := 'Cliente :  '+'Cliente Não indentificado';
 end;
-
 procedure TForm1.btnFecharClick(Sender: TObject);
+var
+iloja : Integer;
+codProduto: string;
+rQTD,rTotal : Real;
 begin
+
+
+ if lvProdutosPedidos.ItemCount = 0 then
+ begin
+   diag.Show(TIconDialog.Error, 'Venda não pode ser salva ', 'Valor da Venda Não pode ser 0');
+
+ end
+ else
+ begin
+
+  if Image2.tag = 1 then
+  begin
+
+   LancaVenda;
+  with FDqCarga do
+ begin
+   Close;
+   sql.Clear;
+   sql.Add('SELECT * FROM mov_temp');
+   Open();
+ end;
+
+  fdqCarga.First;
+  while not fdqCarga.eof do
+   begin
+    iLoja := FDqCarga.FieldByName('loja').asinteger;
+    codProduto:= FDqCarga.FieldByName('cod_produto').asString;
+    rQTD := FDqCarga.FieldByName('qtd').asFloat;
+    rTotal := (rQtd*cdsProdtemp.FieldByName('VENDA').AsFloat);
+    rDesconto := 0;
+    LancaItem(iLoja,0,codproduto,rDesconto,rQtd,FloatToStr(rTotal));
+    fdqcarga.Next;
+   end;
+
+   with FDqCarga do
+    begin
+      Close;
+      sql.Clear;
+      sql.Add('DELETE FROM mov_temp');
+      ExecSQL;
+    end;
+
+
+   RetornaVenda(icodVenda);
+
+
+
   diag.Show(TIconDialog.Success, 'Sucesso! Venda salva ', 'Venda de Numero :'+icodVenda.ToString);
+  //icodVenda := 0;
 
-  icodVenda := 0;
 
-  if Image2.tag <> 2 then
+
+
+  {if Image2.tag <> 2 then
   begin
    with FDqCarga do
     begin
@@ -3370,44 +3103,43 @@ begin
       sql.Add('(:VENDA)');
       ParamByName('VENDA').AsInteger := 0;
 
-
       ExecSQL;
     end;
 
-
+  end;}
   end;
-
  voltaMenu.ExecuteTarget(self);
  //TabControl1.ActiveTab := TabItem1;
 end;
-
+end;
 procedure TForm1.rctCancelarClick(Sender: TObject);
 begin
-
    if codusuario <> 0 then
     voltaMenu.ExecuteTarget(self)
    else
     TabControl1.ActiveTab := tbLogin;
+end;
+procedure TForm1.rctGravaConfigClick(Sender: TObject);
+begin
+rctSalvarClick(self);
+ Rectangle6Click(Self);
 
 end;
 
 procedure TForm1.rctSalvarClick(Sender: TObject);
 begin
-
   if length(Trim(edtLoja.Text)) < 0 then
    begin
      ShowMessage('loja não pode ser vazio');
      edtLoja.SetFocus;
      Exit;
    end;
-
   if length(Trim(edtServidor.Text)) < 0 then
    begin
      ShowMessage('servidor não pode ser vazio');
      edtServidor.SetFocus;
      Exit;
    end;
-
    with FDqCarga do
     begin
       Close;
@@ -3425,163 +3157,148 @@ begin
       sql.Add('(:LOJA,:PRODUTO)');
       ParamByName('LOJA').AsInteger := StrToInt(edtLoja.Text);
       ParamByName('PRODUTO').AsString := edtServidor.Text;
-
       ExecSQL;
     end;
 
-
    iLoja := StrToInt(edtLoja.Text);
    sEndereco := edtServidor.Text;
-
    atualizaColaborador;
-
     if codusuario <> 0 then
       voltaMenu.ExecuteTarget(self)
     else
       TabControl1.ActiveTab := tbLogin;
 end;
-
 procedure TForm1.Rectangle14Click(Sender: TObject);
-var rQtd,rDesconto,percDesconto,retorno,rTotal:Real;
- stotal:string;
+var rQtd,rDesconto,retorno,rTotal,rVenda:Real;
+ stotal,sDescricao:string;
 begin
- {  if cdsProdtemp.Locate('cod_produto',codproduto,[]) then
+if cdsProdtemp.Locate('cod_produto',codproduto,[]) then
     begin
-      rQtd      := StrToFloat(StringReplace(lbQtd.Text,'.',',',[rfReplaceAll,rfIgnoreCase]));
-      rDesconto := StrToFloatDef(edtDesconto.Text,0);
+
+      rQtd      := StrToFloat(StringReplace(lbqtd.Text,'.',',',[rfReplaceAll,rfIgnoreCase]));
+     // rDesconto := StrToFloatDef(edtDesconto.Text,0);
+     rDesconto  := 0;
       rTotal    := (rQtd*cdsProdtemp.FieldByName('VENDA').AsFloat);
       stotal    := FloatToStr(rTotal);
       stotal    := StringReplace(stotal,',','.',[rfReplaceAll,rfIgnoreCase]);
+      sDescricao := cdsProdtemp.FieldByName('DESCRICAO').asString;
+      rVenda     := cdsProdtemp.FieldByName('VENDA').AsFloat;
 
+     if Image2.tag = 1 then
+        begin
+           lancaMovTemp(iLoja,codproduto,SDESCRICAO,rQtd,rTotal,rVenda);
+          LayoutQtdFracionado.Visible := False;
+         //RetornaVenda(icodVenda);
+         voltaVenda.ExecuteTarget(self);
+        end
+        else
+        begin
+         LancaItem(iLoja,0,codproduto,rDesconto,rQtd,FloatToStr(rTotal));
+         LayoutQtdFracionado.Visible := False;
+         RetornaVenda(icodVenda);
+         voltaVenda.ExecuteTarget(self);
 
-      LancaItem(iLoja,0,codproduto,rDesconto,rQtd,FloatToStr(rTotal));
-      LayoutQtd.Visible := False;
+        end;
+
+     { LancaItem(iLoja,0,codproduto,rDesconto,rQtd,FloatToStr(rTotal));
+      LayoutQtdFracionado.Visible := False;
       RetornaVenda(icodVenda);
-      voltaVenda.ExecuteTarget(self);
-
-    end;   }
-
-
-
-     with  fdqCarga do
-     begin
-       close;
-       sql.Clear;
-       sql.Add('select * from produtos where cod_produto = :cod');
-       ParamByName('cod').AsString := lvProdutos.Items[lvProdutos.Selected.Index].Detail;
-       Open();
-     end;
-
-     if not fdqCarga.IsEmpty then
-      begin
-        rQtd        := StrToFloat(StringReplace(edtquantidade.Text,'.',',',[rfReplaceAll,rfIgnoreCase]));
-       // rDesconto := StrToFloatDef(edtDesconto.Text,0);
-        percdesconto:= StrToFloatDef(Edit4.Text,0);
-        rDesconto   := ((rQtd*fdqCarga.FieldByName('VENDA').AsFloat)*percDesconto)/100;
-        rTotal      := (rQtd*fdqCarga.FieldByName('VENDA').AsFloat)-rDesconto;
-        stotal      := FloatToStr(rTotal);
-        stotal      := StringReplace(stotal,',','.',[rfReplaceAll,rfIgnoreCase]);
-
-
-        LancaItem(iLoja,0,codproduto,rDesconto,rQtd,FloatToStr(rTotal));
-        LayoutQtd.Visible := False;
-        RetornaVenda(icodVenda);
-        voltaVenda.ExecuteTarget(self);
-
-      end;
-
+      voltaVenda.ExecuteTarget(self);}
+    end;
 
 
 end;
-
 procedure TForm1.Rectangle19Click(Sender: TObject);
-var rQtd,rDesconto,retorno,rTotal:Real;
- stotal:string;
+var rQtd,rDesconto,retorno,rTotal,rVenda:Real;
+ stotal,sDescricao:string;
 begin
    if cdsProdtemp.Locate('cod_produto',codproduto,[]) then
     begin
+
       rQtd      := StrToFloat(StringReplace(lbl_valor.Text,'.',',',[rfReplaceAll,rfIgnoreCase]));
      // rDesconto := StrToFloatDef(edtDesconto.Text,0);
      rDesconto  := 0;
       rTotal    := (rQtd*cdsProdtemp.FieldByName('VENDA').AsFloat);
       stotal    := FloatToStr(rTotal);
       stotal    := StringReplace(stotal,',','.',[rfReplaceAll,rfIgnoreCase]);
+      sDescricao := cdsProdtemp.FieldByName('DESCRICAO').asString;
+      rVenda     := cdsProdtemp.FieldByName('VENDA').AsFloat;
 
 
-      LancaItem(iLoja,0,codproduto,rDesconto,rQtd,FloatToStr(rTotal));
+
+        if Image2.tag = 1 then
+        begin
+           lancaMovTemp(iLoja,codproduto,SDESCRICAO,rQtd,rTotal,rVenda);
+          LayoutQtdFracionado.Visible := False;
+         //RetornaVenda(icodVenda);
+         voltaVenda.ExecuteTarget(self);
+        end
+        else
+        begin
+         LancaItem(iLoja,0,codproduto,rDesconto,rQtd,FloatToStr(rTotal));
+         LayoutQtdFracionado.Visible := False;
+         RetornaVenda(icodVenda);
+         voltaVenda.ExecuteTarget(self);
+
+        end;
+
+
+
+     { LancaItem(iLoja,0,codproduto,rDesconto,rQtd,FloatToStr(rTotal));
       LayoutQtdFracionado.Visible := False;
       RetornaVenda(icodVenda);
-      voltaVenda.ExecuteTarget(self);
-
+      voltaVenda.ExecuteTarget(self);}
     end;
 
-
 end;
-
 procedure TForm1.Rectangle52Click(Sender: TObject);
 begin
-
 
   atualizaCliente(edtCpf.Text);
   if Image3.tag = 2 then
   begin
-    LancaVenda;
+   // LancaVenda;
   lvProdutosPedidos.Items.Clear;
 
   end;
-
   rctModalCpf.Visible := False;
 end;
-
 procedure TForm1.Rectangle6Click(Sender: TObject);
 begin
  TLoading.Show(Form1,'Atualizando Tabelas...');
  TThread.CreateAnonymousThread(procedure
   begin
-
     atualizaProdutos;
     CargaProduto('',True,0);
-
     tthread.Synchronize(nil,procedure
       begin
         TLoading.Hide;
       end);
 
-
   end).start;
 
-
-
     TabControl1.ActiveTab := tbMenu;
-
 end;
-
 procedure TForm1.Rectangle7Click(Sender: TObject);
 begin
   EnviaRecebimento;
 end;
-
 procedure TForm1.Rectangle9Click(Sender: TObject);
 begin
  VerficaEdit(Self);
-
  if iEdit = 0 then
  begin
  edtCpf.text := edtCpfCliente.Text;
  abreVenda.ExecuteTarget(self);
  rctModalCpf.Visible := True;
  end;
-
 end;
-
 procedure TForm1.RetornaItens(ID:Integer);
 var tb:TFDQuery;
     LItem:TListViewItem;
 begin
-
     tb := TFDQuery.Create(self);
     tb.Connection := FDConnection1;
-
    with tb do
     begin
       Close;
@@ -3591,40 +3308,32 @@ begin
       ParamByName('CANC').AsString := 'F';
       Open();
     end;
-
   if NOT tb.IsEmpty then
     begin
        imgItens.Visible := False;
        lvProdutosPedidos.Items.Clear;
        lvProdutosPedidos.BeginUpdate;
-
       tb.First;
       while not tb.Eof do
         BEGIN
           LItem := lvProdutosPedidos.Items.Add;
-
           LItem.Text := tb.FieldByName('DESCRICAO').AsString;
           LItem.Detail := tb.FieldByName('ID_VENDA').AsString;
          // LItem.Data[ TMultiDetailAppearanceNames.Detail1 ] := formatFloat('0.00',tb.FieldByName('VENDA').AsFloat)+
 //          ' * '+tb.FieldByName('qtd').AsString+' = '+formatFloat('0.00',tb.FieldByName('TOTAL').AsFloat);
           //LItem.Data[ TMultiDetailAppearanceNames.Detail2 ] := 'VALOR  R$ '+formatFloat('0.000',cdsContasTOTAL_PAGAR.AsFloat);
-
           tb.Next;
         END;
-
         lvProdutosPedidos.EndUpdate;
     end
   else
     begin
       imgItens.Visible := true;
     end;
-
     if Assigned(TB) then
       FreeAndNil(TB);
 
-
 end;
-
 procedure TForm1.RetornaVenda(venda: integer);
 const sListaProduto = '<soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:uRestorIntf-IRestor">'
 +'<soapenv:Header/>'
@@ -3635,22 +3344,18 @@ const sListaProduto = '<soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSc
 +'</urn:retornaPREVENDA>'
 +'</soapenv:Body>'
 +'</soapenv:Envelope>';
-
 var sErro, sNumPedido,sRetorno,sRetorno2, sCupom, sLinha, sCab : string;
     iTermino, iPosInicial, iPosFinal,iPosInicial2, iPosFinal2, i, iTamanho, iItem :integer;
     LItem : TListViewItem;
     Retorno ,Retorno2, Solicit: TStringStream;
     sListaPedido: string;
 begin
-
   try
-
     Retorno := TStringStream.Create(EmptyStr);
     sListaPedido:= sListaProduto;
     sListaPedido:= StringReplace(sListaPedido,'?lja?',IntToStr(iLoja),[rfReplaceAll]);
     sListaPedido:= StringReplace(sListaPedido,'?npd?',IntToStr(Venda),[rfReplaceAll]);
     Solicit := TStringStream.Create(sListaPedido, TEncoding.UTF8);
-
     IdHTTP1.Request.ContentType := 'text/xml';
     IdHTTP1.Request.Charset := 'utf-8';
     IdHTTP1.ConnectTimeout := 5000;
@@ -3663,83 +3368,67 @@ begin
     except
       exit;
     end;
-
     sRetorno:= Retorno.DataString;
-
 
     sRetorno := StringReplace(sRetorno,'&gt;','>',[rfReplaceAll,rfIgnoreCase]);
     sRetorno := StringReplace(sRetorno,'&lt;','<',[rfReplaceAll,rfIgnoreCase]);
-
     {Memo1.Lines.Text := sRetorno;
     Exit;}
-
     iPosInicial := Pos('<xmlPreVenda xsi:type="xsd:string">',sRetorno)+75;
     iPosFinal   := Pos('</xmlPreVenda>',sRetorno);
-
     iPosInicial2 := Pos('<xmlMovDav xsi:type="xsd:string">',sRetorno)+72;
     iPosFinal2   := Pos('</xmlMovDav>',sRetorno);
-
     sRetorno2 := copy(sRetorno,iPosInicial2,iPosFinal2-iPosInicial2);
     sRetorno := copy(sRetorno,iPosInicial,iPosFinal-iPosInicial);
-
     Retorno := TStringStream.Create(sRetorno);
     Retorno2 := TStringStream.Create(sRetorno2);
-
     cdsPedido.Close;
     cdsPedido.CreateDataSet;
-
     cdsPedido.LoadFromStream(Retorno);
-
     cdsItensVenda.Close;
     cdsItensVenda.CreateDataSet;
     cdsItensVenda.LoadFromStream(Retorno2);
-
     iCod_Cadastro := cdsPedidoRESPONSAVEL.AsInteger;
     lbNvenda.Text := 'N° VENDA : '+FormatFloat('00000000',icodVenda);
     lbTotal.Text := 'TOTAL : R$ '+formatFloat('0.00',cdsPedidoTOTAL.AsFloat);
     listaItensMesa;
-
   except
     ShowMessage('Falha da importação de produtos');
   end;
 
-
 end;
-
 procedure TForm1.RoundRect1Click(Sender: TObject);
 begin
   abreMenu.ExecuteTarget(self);
+end;
+procedure TForm1.SpeedButton13Click(Sender: TObject);
+begin
+ tabControl1.ActiveTab := tbMenu;
 end;
 
 procedure TForm1.SpeedButton1Click(Sender: TObject);
 begin
   abreConfig.ExecuteTarget(self);
 end;
-
 procedure TForm1.SpeedButton2Click(Sender: TObject);
 begin
  voltaMenu.ExecuteTarget(self);
 end;
-
 procedure TForm1.SpeedButton3Click(Sender: TObject);
 begin
   listaVendas;
 end;
-
 procedure TForm1.SpeedButton4Click(Sender: TObject);
 begin
    if codusuario <> 0 then
     voltaMenu.ExecuteTarget(self)
    else
     TabControl1.ActiveTab := tbLogin;
-
 end;
-
 procedure TForm1.SpeedButton5Click(Sender: TObject);
 begin
   voltaVenda.ExecuteTarget(self);
 end;
-
 procedure TForm1.Timer1Timer(Sender: TObject);
 begin
   Timer1.Enabled := False;
@@ -3760,15 +3449,11 @@ var sErro, sNumPedido,sRetorno, sCupom, sLinha, sCab : string;
     sCod,sListaPedido: string;
     icont:Integer;
 begin
-
   try
-
   Retorno := TStringStream.Create(EmptyStr);
   sListaPedido:= sListaProduto;
   sListaPedido:=StringReplace(sListaPedido,'?l?',IntToStr(iLoja),[rfReplaceAll]);
-
   Solicit := TStringStream.Create(sListaPedido, TEncoding.UTF8);
-
   IdHTTP1.Request.ContentType := 'text/xml';
   IdHTTP1.Request.Charset := 'utf-8';
   IdHTTP1.ConnectTimeout := 5000;
@@ -3782,27 +3467,20 @@ begin
       ShowMessage('falha na conexao ');
       exit;
     end;
-
     sRetorno:= Retorno.DataString;
-
     sRetorno := StringReplace(sRetorno,'&gt;','>',[rfReplaceAll,rfIgnoreCase]);
     sRetorno := StringReplace(sRetorno,'&lt;','<',[rfReplaceAll,rfIgnoreCase]);
-
     iPosInicial := Pos('<xml xsi:type="xsd:string">',sRetorno)+66;
     iPosFinal   := Pos('</xml>',sRetorno);
     sRetorno := copy(sRetorno,iPosInicial,iPosFinal-iPosInicial);
-
    Retorno := TStringStream.Create(sRetorno);
     cdsClientes.Close;
     cdsClientes.CreateDataSet;
     cdsClientestemp.LoadFromStream(Retorno);
-
     SCOD :='0';
   if not cdsClientestemp.IsEmpty then
   begin
-
       cdsClientestemp.First;
-
 
        while not cdsClientestemp.eof do
         begin
@@ -3815,40 +3493,33 @@ begin
                 scod := '1';
                 iCod_Cadastro := cdsclientestemp.FieldByName('COD_CADASTRO').Asinteger;
                 lbCliente.Visible := True;
-                Layout11.Height := 85;
-                lbCliente.Text := 'Cliente :  '+ cdsclientestemp.FieldByName('CNPJ').AsString+'-'+cdsClientestemp.FieldByName('RAZAO').AsString;
+
+                lbCliente.Text := 'Cliente :  '+cdsClientestemp.FieldByName('RAZAO').AsString;
                 end;
               end;
-
                if Image2.tag = 2 then
                begin
                    if cdsclientestemp.FieldByName('COD_CADASTRO').Asinteger = cod.ToInteger then
                  begin
                  scod := '1';
-                 //iCod_Cadastro := cdsclientestemp.FieldByName('COD_CADASTRO').Asinteger;
+                 iCod_Cadastro := cdsclientestemp.FieldByName('COD_CADASTRO').Asinteger;
                  lbCliente.Visible := True;
-                 Layout11.Height := 85;
-                 lbCliente.Text := 'Cliente :  '+ cdsclientestemp.FieldByName('CNPJ').AsString+'-'+cdsClientestemp.FieldByName('RAZAO').AsString;
-                  end;
 
+                 lbCliente.Text := 'Cliente :  '+cdsClientestemp.FieldByName('RAZAO').AsString;
+                  end;
                end;
            end;
            cdsClientestemp.Next;
         end;
-
         if sCod = '0' then
         begin
           diag.Show(TIconDialog.Question, 'Atenção ',
               'Cliente Não Cadastrado,Desja Cadastrar ?', 'Sim',ClickSimCliente, 'Não', ClickNao);
         end;
-
   end;
-
 except
-
   diag.Show(TIconDialog.Error,'Falha da importação de produtos','' )
 end;
-
 end;
 procedure TForm1.VerficaEdit(Sender: TObject);
 begin
@@ -3887,12 +3558,130 @@ begin
     iEdit := 0;
   end;
 
+end;
+procedure TForm1.lancaMovTemp(loja:Integer;cod_produto,descricao:String;qtd,total,venda:Real);
+var LItem:TListViewItem;
+    txt:TListItemText;
+    img:TListItemImage;
+    stotal : string;
+    qtdTotal : Real;
+    soma : Real;
+
+begin
+
+    with FDqCarga do
+   begin
+   Close;
+   sql.Clear;
+   sql.Add('SELECT * FROM mov_temp where cod_produto = :pcod');
+   ParamByName('pcod').AsString := cod_produto;
+   Open();
+  end;
+
+  qtdTotal :=  FDqCarga.FieldByName('QTD').asFloat;
+  soma :=   FDqCarga.FieldByName('TOTAL').asFloat;
+
+ if  FDqCarga.FieldByName('COD_PRODUTO').AsString = '' then
+ begin
+
+  with fdqCarga do
+   begin
+     Close;
+     sql.Clear;
+     sql.Add('INSERT INTO mov_temp');
+     sql.Add('(loja');
+     sql.Add(',cod_produto');
+     sql.Add(',descricao');
+     sql.Add(',total');
+     sql.Add(',venda');
+     sql.Add(',qtd)');
+     sql.Add('VALUES');
+     sql.Add('(:loja');
+     sql.Add(',:cod_produto');
+     sql.Add(',:descricao');
+     sql.Add(',:total');
+     sql.Add(',:venda');
+     sql.Add(',:qtd)');
+     ParamByName('loja').AsInteger   := loja;
+     ParamByName('cod_produto').AsString     := cod_produto;
+     ParamByName('descricao').AsString     := descricao;
+     ParamByName('qtd').AsFloat          := qtd ;
+     ParamByName('total').AsFloat          := total;
+     ParamByName('venda').AsFloat          := venda;
+     ExecSQL;
+   end;
+
+  end
+  ELSE
+  begin
+   with fdqCarga do
+   begin
+     Close;
+     sql.Clear;
+     sql.Add('UPDATE MOV_TEMP SET QTD = :qtd, total = :total where cod_produto = :cod_produto');
+     ParamByName('cod_produto').AsString     := cod_produto;
+     ParamByName('qtd').AsFloat          := qtd+ qtdTotal;
+     ParamByName('total').AsFloat          := total + soma;
+
+     ExecSQL;
+   end;
+
+  end;
+
+       with FDqCarga do
+     begin
+       Close;
+       sql.Clear;
+       sql.Add('SELECT SUM(TOTAL) AS TOTAL from mov_temp');
+       Open();
+     end;
+
+    with FDqCarga do
+     begin
+       Close;
+       sql.Clear;
+       sql.Add('SELECT * FROM mov_temp');
+       Open();
+     end;
 
 
 
+   lvProdutosPedidos.Items.Clear;
+  while not fdqCarga.eof do
+   begin
+    LItem := lvProdutosPedidos.Items.Add;
+    with LItem do
+     begin
+       txt := TListItemText(Objects.FindDrawable('Text1'));
+       txt.Text := FDqCarga.FieldByName('DESCRICAO').asString;
+       txt.WordWrap := False;
+       txt.Font.Size := 12;
+       txt.Font.Style := [TFontStyle.fsBold];
+       txt := TListItemText(Objects.FindDrawable('Text3'));
+       txt.Text := formatfloat('0.00',FDqCarga.FieldByName('VENDA').AsFloat)
+       +'  *  '+formatfloat('0.00',FDqCarga.FieldByName('QTD').AsFloat)
+       +'  =  '+formatfloat('0.00',FDqCarga.FieldByName('TOTAL').AsFloat);
+       txt.WordWrap := true;
+       txt.Font.Size := 12;
+       img := TListItemImage(Objects.FindDrawable('Image2'));
+       img.Bitmap := imgExcluir.Bitmap;
+       LItem.Detail := FDqCarga.FieldByName('COD_PRODUTO').AsString;
+     end;
+     fdqcarga.Next;
+   end;
 
 
+       with FDqCarga do
+     begin
+       Close;
+       sql.Clear;
+       sql.Add('SELECT SUM(TOTAL) AS TOTAL from mov_temp');
+       Open();
+     end;
 
+      lbTotal.Text :='TOTAL : R$ '+formatfloat('0.00',FDqCarga.FieldByName('TOTAL').AsFloat);
 
 end;
+
+
 end.
